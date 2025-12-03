@@ -136,6 +136,22 @@ export const translations = {
     notApplicable: 'N/A',
     addComment: 'Add comment...',
     completeInspection: 'Complete Inspection',
+    checklistItems: 'Checklist Items',
+    noItemsInChecklist: 'No items in this checklist.',
+    loadingInspection: 'Loading inspection...',
+    inspectionNotFound: 'Inspection not found',
+    saveAndExit: 'Save & Exit',
+    completing: 'Completing...',
+    incompleteConfirm: 'Not all items have been completed. Do you want to finish anyway?',
+    
+    // Photo Upload
+    desiredState: 'Desired State',
+    currentState: 'Current State',
+    uploadPhoto: 'Upload Photo',
+    uploadDesiredPhoto: 'Upload Desired Photo',
+    uploadCurrentStatePhoto: 'Upload Current State Photo',
+    desiredStatePhoto: 'Desired State Photo',
+    uploading: 'Uploading...',
     
     // Report
     inspectionReport: 'Inspection Report',
@@ -143,6 +159,12 @@ export const translations = {
     print: 'Print',
     exportPdf: 'Export PDF',
     back: 'Back',
+    detailedResults: 'Detailed Results',
+    noResultsRecorded: 'No results recorded for this inspection.',
+    comment: 'Comment',
+    backToInspections: 'Back to Inspections',
+    inspector: 'Inspector',
+    loadingReport: 'Loading report...',
     
     // Language
     language: 'Language',
@@ -286,6 +308,22 @@ export const translations = {
     notApplicable: 'N/A',
     addComment: 'Kommentar hinzufügen...',
     completeInspection: 'Prüfung abschließen',
+    checklistItems: 'Checklisten-Einträge',
+    noItemsInChecklist: 'Keine Einträge in dieser Checkliste.',
+    loadingInspection: 'Prüfung wird geladen...',
+    inspectionNotFound: 'Prüfung nicht gefunden',
+    saveAndExit: 'Speichern & Beenden',
+    completing: 'Wird abgeschlossen...',
+    incompleteConfirm: 'Nicht alle Einträge wurden abgeschlossen. Möchten Sie trotzdem beenden?',
+    
+    // Photo Upload
+    desiredState: 'Soll-Zustand',
+    currentState: 'Ist-Zustand',
+    uploadPhoto: 'Foto hochladen',
+    uploadDesiredPhoto: 'Soll-Zustand Foto hochladen',
+    uploadCurrentStatePhoto: 'Ist-Zustand Foto hochladen',
+    desiredStatePhoto: 'Soll-Zustand Foto',
+    uploading: 'Wird hochgeladen...',
     
     // Report
     inspectionReport: 'Prüfbericht',
@@ -293,6 +331,12 @@ export const translations = {
     print: 'Drucken',
     exportPdf: 'PDF exportieren',
     back: 'Zurück',
+    detailedResults: 'Detaillierte Ergebnisse',
+    noResultsRecorded: 'Keine Ergebnisse für diese Prüfung aufgezeichnet.',
+    comment: 'Kommentar',
+    backToInspections: 'Zurück zu Prüfungen',
+    inspector: 'Prüfer',
+    loadingReport: 'Bericht wird geladen...',
     
     // Language
     language: 'Sprache',

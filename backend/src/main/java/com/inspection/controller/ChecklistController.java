@@ -92,4 +92,19 @@ public class ChecklistController {
         }
         return ResponseEntity.notFound().build();
     }
+    
+    @PutMapping("/items/{itemId}")
+    public ResponseEntity<ChecklistItem> updateChecklistItem(@PathVariable Long itemId, @RequestBody ChecklistItem item) {
+        return checklistItemRepository.findById(itemId)
+                .map(existing -> {
+                    if (item.getDescription() != null) {
+                        existing.setDescription(item.getDescription());
+                    }
+                    if (item.getDesiredPhotoUrl() != null) {
+                        existing.setDesiredPhotoUrl(item.getDesiredPhotoUrl());
+                    }
+                    return ResponseEntity.ok(checklistItemRepository.save(existing));
+                })
+                .orElse(ResponseEntity.notFound().build());
+    }
 }

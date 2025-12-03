@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { getInspections, deleteInspection, updateInspectionStatus } from '../services/api';
 import { Inspection, InspectionStatus } from '../types';
 import { useLanguage } from '../contexts/LanguageContext';
+import { useAuth } from '../contexts/AuthContext';
 
 const InspectionList: React.FC = () => {
   const [inspections, setInspections] = useState<Inspection[]>([]);
@@ -10,6 +11,7 @@ const InspectionList: React.FC = () => {
   const [filter, setFilter] = useState<string>('all');
   const navigate = useNavigate();
   const { t } = useLanguage();
+  const { canEdit } = useAuth();
 
   useEffect(() => {
     fetchInspections();
@@ -87,9 +89,11 @@ const InspectionList: React.FC = () => {
     <div className="dashboard">
       <div className="section-header">
         <h2>{t('inspections')}</h2>
-        <Link to="/inspections/new" className="btn btn-primary">
-          {t('newInspection')}
-        </Link>
+        {canEdit && (
+          <Link to="/inspections/new" className="btn btn-primary">
+            {t('newInspection')}
+          </Link>
+        )}
       </div>
 
       <div className="form-group" style={{ marginBottom: '1rem' }}>
@@ -137,7 +141,7 @@ const InspectionList: React.FC = () => {
                   </td>
                   <td>
                     <div className="action-buttons">
-                      {inspection.status === InspectionStatus.PLANNED && (
+                      {canEdit && inspection.status === InspectionStatus.PLANNED && (
                         <button
                           className="btn btn-success"
                           onClick={() => {
@@ -148,7 +152,7 @@ const InspectionList: React.FC = () => {
                           {t('start')}
                         </button>
                       )}
-                      {inspection.status === InspectionStatus.IN_PROGRESS && (
+                      {canEdit && inspection.status === InspectionStatus.IN_PROGRESS && (
                         <>
                           <Link to={`/inspections/${inspection.id}/execute`} className="btn btn-warning">
                             {t('continue')}
@@ -166,15 +170,19 @@ const InspectionList: React.FC = () => {
                           {t('report')}
                         </Link>
                       )}
-                      <Link to={`/inspections/${inspection.id}/edit`} className="btn btn-secondary">
-                        {t('edit')}
-                      </Link>
-                      <button
-                        className="btn btn-danger"
-                        onClick={() => handleDelete(inspection.id)}
-                      >
-                        {t('delete')}
-                      </button>
+                      {canEdit && (
+                        <Link to={`/inspections/${inspection.id}/edit`} className="btn btn-secondary">
+                          {t('edit')}
+                        </Link>
+                      )}
+                      {canEdit && (
+                        <button
+                          className="btn btn-danger"
+                          onClick={() => handleDelete(inspection.id)}
+                        >
+                          {t('delete')}
+                        </button>
+                      )}
                     </div>
                   </td>
                 </tr>
