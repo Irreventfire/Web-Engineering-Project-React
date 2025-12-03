@@ -145,6 +145,15 @@ const AdminDashboard: React.FC = () => {
     }
   };
 
+  const openAddModal = () => {
+    setError('');
+    setNewUsername('');
+    setNewEmail('');
+    setNewPassword('');
+    setNewRole(UserRole.USER);
+    setShowAddModal(true);
+  };
+
   if (!isAdmin) {
     return null;
   }
@@ -157,7 +166,7 @@ const AdminDashboard: React.FC = () => {
     <div className="admin-dashboard">
       <div className="section-header">
         <h2>{t('adminDashboard')}</h2>
-        <button className="btn btn-primary" onClick={() => setShowAddModal(true)}>
+        <button className="btn btn-primary" onClick={openAddModal}>
           {t('addUser')}
         </button>
       </div>

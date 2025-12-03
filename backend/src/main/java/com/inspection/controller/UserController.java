@@ -48,6 +48,11 @@ public class UserController {
             return ResponseEntity.badRequest().body(Map.of("error", "Username, password and email are required"));
         }
         
+        // Validate password length (minimum 6 characters for demo purposes)
+        if (password.length() < 6) {
+            return ResponseEntity.badRequest().body(Map.of("error", "Password must be at least 6 characters"));
+        }
+        
         if (userRepository.existsByUsername(username)) {
             return ResponseEntity.badRequest().body(Map.of("error", "Username already exists"));
         }
@@ -65,6 +70,8 @@ public class UserController {
             }
         }
         
+        // NOTE: This is a simplified demo implementation with plain text passwords.
+        // In production, use BCrypt or another secure hashing algorithm.
         User newUser = new User(username, password, email, role);
         User savedUser = userRepository.save(newUser);
         
