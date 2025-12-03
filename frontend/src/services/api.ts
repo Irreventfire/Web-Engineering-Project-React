@@ -59,6 +59,7 @@ export const getChecklistItems = (id: number) => api.get<ChecklistItem[]>(`/chec
 export const createChecklist = (checklist: Partial<Checklist>) => api.post<Checklist>('/checklists', checklist);
 export const addChecklistItem = (checklistId: number, item: Partial<ChecklistItem>) => api.post<ChecklistItem>(`/checklists/${checklistId}/items`, item);
 export const updateChecklist = (id: number, checklist: Partial<Checklist>) => api.put<Checklist>(`/checklists/${id}`, checklist);
+export const updateChecklistItem = (itemId: number, item: Partial<ChecklistItem>) => api.put<ChecklistItem>(`/checklists/items/${itemId}`, item);
 export const deleteChecklist = (id: number) => api.delete(`/checklists/${id}`);
 export const deleteChecklistItem = (itemId: number) => api.delete(`/checklists/items/${itemId}`);
 
@@ -67,5 +68,17 @@ export const getResultsByInspection = (inspectionId: number) => api.get<Result[]
 export const createResult = (inspectionId: number, result: Partial<Result>) => api.post<Result>(`/results/inspection/${inspectionId}`, result);
 export const updateResult = (id: number, result: Partial<Result>) => api.put<Result>(`/results/${id}`, result);
 export const deleteResult = (id: number) => api.delete(`/results/${id}`);
+
+// File upload endpoint
+export const uploadFile = async (file: File): Promise<{ url: string; filename: string }> => {
+  const formData = new FormData();
+  formData.append('file', file);
+  const response = await api.post<{ url: string; filename: string }>('/files/upload', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+  return response.data;
+};
 
 export default api;

@@ -20,6 +20,7 @@ export interface ChecklistItem {
   id: number;
   description: string;
   orderIndex: number;
+  desiredPhotoUrl?: string;
 }
 
 export interface Checklist {

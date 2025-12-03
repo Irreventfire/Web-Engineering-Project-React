@@ -81,9 +81,30 @@ const AppContent: React.FC = () => {
         <Routes>
           <Route path="/" element={<Dashboard />} />
           <Route path="/inspections" element={<InspectionList />} />
-          <Route path="/inspections/new" element={<InspectionForm />} />
-          <Route path="/inspections/:id/edit" element={<InspectionForm />} />
-          <Route path="/inspections/:id/execute" element={<InspectionExecution />} />
+          <Route 
+            path="/inspections/new" 
+            element={
+              <ProtectedRoute requiredRole={UserRole.USER}>
+                <InspectionForm />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/inspections/:id/edit" 
+            element={
+              <ProtectedRoute requiredRole={UserRole.USER}>
+                <InspectionForm />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/inspections/:id/execute" 
+            element={
+              <ProtectedRoute requiredRole={UserRole.USER}>
+                <InspectionExecution />
+              </ProtectedRoute>
+            } 
+          />
           <Route path="/inspections/:id/report" element={<InspectionReport />} />
           <Route path="/checklists" element={<ChecklistManagement />} />
           <Route 

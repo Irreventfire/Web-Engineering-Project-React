@@ -3,12 +3,14 @@ import { Link } from 'react-router-dom';
 import { getStatistics, getInspections } from '../services/api';
 import { Statistics, Inspection, InspectionStatus } from '../types';
 import { useLanguage } from '../contexts/LanguageContext';
+import { useAuth } from '../contexts/AuthContext';
 
 const Dashboard: React.FC = () => {
   const [statistics, setStatistics] = useState<Statistics | null>(null);
   const [inspections, setInspections] = useState<Inspection[]>([]);
   const [loading, setLoading] = useState(true);
   const { t } = useLanguage();
+  const { canEdit } = useAuth();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -86,9 +88,11 @@ const Dashboard: React.FC = () => {
       <div className="inspection-list">
         <div className="section-header">
           <h3>{t('recentInspections')}</h3>
-          <Link to="/inspections/new" className="btn btn-primary">
-            {t('newInspection')}
-          </Link>
+          {canEdit && (
+            <Link to="/inspections/new" className="btn btn-primary">
+              {t('newInspection')}
+            </Link>
+          )}
         </div>
         
         {inspections.length === 0 ? (
@@ -120,10 +124,12 @@ const Dashboard: React.FC = () => {
                   </td>
                   <td>
                     <div className="action-buttons">
-                      <Link to={`/inspections/${inspection.id}`} className="btn btn-primary">
-                        {t('view')}
-                      </Link>
-                      {inspection.status !== InspectionStatus.COMPLETED && (
+                      {inspection.status === InspectionStatus.COMPLETED && (
+                        <Link to={`/inspections/${inspection.id}/report`} className="btn btn-primary">
+                          {t('report')}
+                        </Link>
+                      )}
+                      {canEdit && inspection.status !== InspectionStatus.COMPLETED && (
                         <Link to={`/inspections/${inspection.id}/execute`} className="btn btn-success">
                           {inspection.status === InspectionStatus.PLANNED ? t('start') : t('continue')}
                         </Link>
