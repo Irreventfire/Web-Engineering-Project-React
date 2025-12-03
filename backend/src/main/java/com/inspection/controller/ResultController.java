@@ -1,7 +1,6 @@
 package com.inspection.controller;
 
 import com.inspection.model.Result;
-import com.inspection.model.Inspection;
 import com.inspection.repository.ResultRepository;
 import com.inspection.repository.InspectionRepository;
 import org.springframework.http.HttpStatus;

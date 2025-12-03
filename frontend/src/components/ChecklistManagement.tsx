@@ -155,17 +155,16 @@ const ChecklistManagement: React.FC = () => {
               </div>
               <div className="checklist-items">
                 {checklist.items.length === 0 ? (
-                  <p style={{ color: '#7f8c8d', fontStyle: 'italic' }}>{t('noItemsYet')}</p>
+                  <p className="no-items-text">{t('noItemsYet')}</p>
                 ) : (
-                  checklist.items.map(item => (
-                    <div key={item.id} className="checklist-item" style={{ flexDirection: 'column', alignItems: 'flex-start' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', width: '100%' }}>
-                        <span className="item-number">{item.orderIndex}</span>
-                        <span style={{ flex: 1 }}>{item.description}</span>
+                  checklist.items.map((item, itemIndex) => (
+                    <div key={item.id} className="checklist-item checklist-item-column">
+                      <div className="checklist-item-row">
+                        <span className="item-number">{itemIndex + 1}</span>
+                        <span className="checklist-item-text">{item.description}</span>
                         {canEdit && (
                           <button 
-                            className="btn btn-danger" 
-                            style={{ padding: '0.25rem 0.5rem', fontSize: '0.75rem' }}
+                            className="btn btn-danger btn-small button-margin-left" 
                             onClick={() => handleDeleteItem(checklist.id, item.id)}
                           >
                             ✕
@@ -173,17 +172,17 @@ const ChecklistManagement: React.FC = () => {
                         )}
                       </div>
                       {item.desiredPhotoUrl && (
-                        <div style={{ marginTop: '0.5rem', marginLeft: '2rem' }}>
+                        <div className="checklist-item-photo-container">
                           <img 
                             src={`${API_BASE_URL}${item.desiredPhotoUrl.replace('/api', '')}`}
                             alt={t('desiredState')} 
-                            style={{ maxWidth: '150px', maxHeight: '100px', borderRadius: '4px', border: '1px solid #dce4ec' }}
+                            className="desired-state-image"
                           />
-                          <span style={{ display: 'block', fontSize: '0.75rem', color: '#7f8c8d' }}>{t('desiredState')}</span>
+                          <span className="checklist-item-desired-state">{t('desiredState')}</span>
                         </div>
                       )}
                       {canEdit && !item.desiredPhotoUrl && (
-                        <div className="photo-upload" style={{ marginTop: '0.5rem', marginLeft: '2rem' }}>
+                        <div className="photo-upload checklist-item-photo-container">
                           <input
                             type="file"
                             id={`item-photo-${item.id}`}
@@ -201,7 +200,7 @@ const ChecklistManagement: React.FC = () => {
                 )}
               </div>
               {canEdit && (
-                <div style={{ padding: '1rem', borderTop: '1px solid #e9ecef' }}>
+                <div className="checklist-item-footer">
                   <div className="action-buttons">
                     <button 
                       className="btn btn-primary" 
@@ -301,11 +300,11 @@ const ChecklistManagement: React.FC = () => {
                   </label>
                 </div>
                 {newItem.desiredPhotoUrl && (
-                  <div style={{ marginTop: '0.5rem' }}>
+                  <div className="photo-upload">
                     <img 
                       src={`${API_BASE_URL}${newItem.desiredPhotoUrl.replace('/api', '')}`}
                       alt={t('desiredState')} 
-                      style={{ maxWidth: '200px', maxHeight: '150px', borderRadius: '4px', border: '1px solid #dce4ec' }}
+                      className="preview-image-large"
                     />
                   </div>
                 )}

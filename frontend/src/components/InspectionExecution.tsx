@@ -204,12 +204,12 @@ const InspectionExecution: React.FC = () => {
                 
                 {/* Show desired state photo if available */}
                 {item.desiredPhotoUrl && (
-                  <div style={{ marginBottom: '1rem', padding: '0.5rem', backgroundColor: '#e8f5e9', borderRadius: '4px' }}>
-                    <span style={{ fontSize: '0.85rem', fontWeight: 500, color: '#388e3c' }}>{t('desiredState')}:</span>
+                  <div className="desired-state-container">
+                    <span className="desired-state-label">{t('desiredState')}:</span>
                     <img 
                       src={`${API_BASE_URL}${item.desiredPhotoUrl.replace('/api', '')}`}
                       alt={t('desiredState')} 
-                      style={{ display: 'block', maxWidth: '200px', maxHeight: '150px', marginTop: '0.5rem', borderRadius: '4px', border: '1px solid #dce4ec' }}
+                      className="desired-state-image"
                     />
                   </div>
                 )}
@@ -244,14 +244,14 @@ const InspectionExecution: React.FC = () => {
                 />
 
                 {/* Current state photo upload and display */}
-                <div style={{ marginTop: '0.5rem' }}>
+                <div className="current-state-container">
                   {result?.photoUrl ? (
-                    <div style={{ padding: '0.5rem', backgroundColor: '#fff3e0', borderRadius: '4px' }}>
-                      <span style={{ fontSize: '0.85rem', fontWeight: 500, color: '#f57c00' }}>{t('currentState')}:</span>
+                    <div className="current-state-wrapper">
+                      <span className="current-state-label">{t('currentState')}:</span>
                       <img 
                         src={`${API_BASE_URL}${result.photoUrl.replace('/api', '')}`}
                         alt={t('currentState')} 
-                        style={{ display: 'block', maxWidth: '200px', maxHeight: '150px', marginTop: '0.5rem', borderRadius: '4px', border: '1px solid #dce4ec' }}
+                        className="current-state-image"
                       />
                     </div>
                   ) : (
@@ -273,7 +273,7 @@ const InspectionExecution: React.FC = () => {
             );
           })}
 
-          <div className="form-actions" style={{ marginTop: '2rem' }}>
+          <div className="form-actions form-actions-spaced">
             <button 
               className="btn btn-secondary" 
               onClick={() => navigate('/inspections')}

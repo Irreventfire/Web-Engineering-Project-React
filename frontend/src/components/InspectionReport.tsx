@@ -125,39 +125,39 @@ const InspectionReport: React.FC = () => {
       ) : (
         <div className="results-list">
           {results.map((result, index) => (
-            <div key={result.id} className="result-item" style={{ marginBottom: '1.5rem' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.5rem' }}>
-                <h4 style={{ margin: 0 }}>{index + 1}. {result.checklistItem?.description || 'N/A'}</h4>
+            <div key={result.id} className="result-item result-item-spaced">
+              <div className="result-header">
+                <h4>{index + 1}. {result.checklistItem?.description || 'N/A'}</h4>
                 <span className={`status-badge ${getStatusClass(result.status)}`}>
                   {getStatusLabel(result.status)}
                 </span>
               </div>
               
               {result.comment && (
-                <p style={{ margin: '0.5rem 0', color: '#666' }}>
+                <p className="result-comment">
                   <strong>{t('comment')}:</strong> {result.comment}
                 </p>
               )}
               
-              <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+              <div className="result-photos">
                 {result.checklistItem?.desiredPhotoUrl && (
-                  <div style={{ padding: '0.5rem', backgroundColor: '#e8f5e9', borderRadius: '4px' }}>
-                    <span style={{ fontSize: '0.85rem', fontWeight: 500, color: '#388e3c', display: 'block' }}>{t('desiredState')}:</span>
+                  <div className="desired-state-container">
+                    <span className="desired-state-label">{t('desiredState')}:</span>
                     <img 
                       src={`${API_BASE_URL}${result.checklistItem.desiredPhotoUrl.replace('/api', '')}`}
                       alt={t('desiredState')} 
-                      style={{ display: 'block', maxWidth: '200px', maxHeight: '150px', marginTop: '0.5rem', borderRadius: '4px', border: '1px solid #dce4ec' }}
+                      className="desired-state-image"
                     />
                   </div>
                 )}
                 
                 {result.photoUrl && (
-                  <div style={{ padding: '0.5rem', backgroundColor: '#fff3e0', borderRadius: '4px' }}>
-                    <span style={{ fontSize: '0.85rem', fontWeight: 500, color: '#f57c00', display: 'block' }}>{t('currentState')}:</span>
+                  <div className="current-state-wrapper">
+                    <span className="current-state-label">{t('currentState')}:</span>
                     <img 
                       src={`${API_BASE_URL}${result.photoUrl.replace('/api', '')}`}
                       alt={t('currentState')} 
-                      style={{ display: 'block', maxWidth: '200px', maxHeight: '150px', marginTop: '0.5rem', borderRadius: '4px', border: '1px solid #dce4ec' }}
+                      className="current-state-image"
                     />
                   </div>
                 )}

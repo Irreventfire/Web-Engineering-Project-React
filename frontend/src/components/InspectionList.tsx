@@ -96,11 +96,12 @@ const InspectionList: React.FC = () => {
         )}
       </div>
 
-      <div className="form-group" style={{ marginBottom: '1rem' }}>
+      <div className="form-group filter-select-container">
         <select 
           value={filter} 
           onChange={(e) => setFilter(e.target.value)}
-          style={{ padding: '0.5rem', borderRadius: '4px', border: '1px solid #dce4ec' }}
+          className="filter-select"
+          aria-label="Filter inspections by status"
         >
           <option value="all">{t('allInspections')}</option>
           <option value={InspectionStatus.PLANNED}>{t('planned')}</option>

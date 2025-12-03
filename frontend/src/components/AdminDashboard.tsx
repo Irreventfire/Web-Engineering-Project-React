@@ -281,6 +281,7 @@ const AdminDashboard: React.FC = () => {
                           value={user.role}
                           onChange={(e) => handleRoleChange(user.id, e.target.value as UserRole)}
                           className="role-select"
+                          aria-label={`Change role for ${user.username}`}
                         >
                           <option value={UserRole.ADMIN}>Admin</option>
                           <option value={UserRole.USER}>User</option>
