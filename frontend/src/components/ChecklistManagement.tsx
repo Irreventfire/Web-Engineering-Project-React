@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { getChecklists, createChecklist, deleteChecklist, addChecklistItem, deleteChecklistItem } from '../services/api';
 import { Checklist } from '../types';
+import { useLanguage } from '../contexts/LanguageContext';
 
 const ChecklistManagement: React.FC = () => {
   const [checklists, setChecklists] = useState<Checklist[]>([]);
@@ -10,6 +11,7 @@ const ChecklistManagement: React.FC = () => {
   const [selectedChecklist, setSelectedChecklist] = useState<Checklist | null>(null);
   const [newChecklist, setNewChecklist] = useState({ name: '', description: '' });
   const [newItem, setNewItem] = useState({ description: '', orderIndex: 0 });
+  const { t } = useLanguage();
 
   useEffect(() => {
     fetchChecklists();
@@ -39,7 +41,7 @@ const ChecklistManagement: React.FC = () => {
   };
 
   const handleDeleteChecklist = async (id: number) => {
-    if (window.confirm('Are you sure you want to delete this checklist?')) {
+    if (window.confirm(t('deleteChecklistConfirm'))) {
       try {
         await deleteChecklist(id);
         setChecklists(checklists.filter(c => c.id !== id));
@@ -93,22 +95,22 @@ const ChecklistManagement: React.FC = () => {
   };
 
   if (loading) {
-    return <div className="loading">Loading checklists...</div>;
+    return <div className="loading">{t('loadingChecklists')}</div>;
   }
 
   return (
     <div className="checklist-container">
       <div className="section-header">
-        <h2>Checklists</h2>
+        <h2>{t('checklists')}</h2>
         <button className="btn btn-primary" onClick={() => setShowModal(true)}>
-          New Checklist
+          {t('newChecklist')}
         </button>
       </div>
 
       {checklists.length === 0 ? (
         <div className="empty-state">
-          <h3>No checklists yet</h3>
-          <p>Create a checklist to define inspection criteria.</p>
+          <h3>{t('noChecklistsYet')}</h3>
+          <p>{t('defineInspectionCriteria')}</p>
         </div>
       ) : (
         <div className="checklist-grid">
@@ -120,7 +122,7 @@ const ChecklistManagement: React.FC = () => {
               </div>
               <div className="checklist-items">
                 {checklist.items.length === 0 ? (
-                  <p style={{ color: '#7f8c8d', fontStyle: 'italic' }}>No items yet</p>
+                  <p style={{ color: '#7f8c8d', fontStyle: 'italic' }}>{t('noItemsYet')}</p>
                 ) : (
                   checklist.items.map(item => (
                     <div key={item.id} className="checklist-item">
@@ -143,13 +145,13 @@ const ChecklistManagement: React.FC = () => {
                     className="btn btn-primary" 
                     onClick={() => openAddItemModal(checklist)}
                   >
-                    Add Item
+                    {t('addItem')}
                   </button>
                   <button 
                     className="btn btn-danger" 
                     onClick={() => handleDeleteChecklist(checklist.id)}
                   >
-                    Delete
+                    {t('delete')}
                   </button>
                 </div>
               </div>
@@ -163,37 +165,37 @@ const ChecklistManagement: React.FC = () => {
         <div className="modal-overlay" onClick={() => setShowModal(false)}>
           <div className="modal-content" onClick={e => e.stopPropagation()}>
             <div className="modal-header">
-              <h3>New Checklist</h3>
+              <h3>{t('newChecklist')}</h3>
               <button className="modal-close" onClick={() => setShowModal(false)}>×</button>
             </div>
             <form onSubmit={handleCreateChecklist}>
               <div className="form-group">
-                <label htmlFor="name">Name *</label>
+                <label htmlFor="name">{t('name')} *</label>
                 <input
                   type="text"
                   id="name"
                   value={newChecklist.name}
                   onChange={(e) => setNewChecklist({ ...newChecklist, name: e.target.value })}
                   required
-                  placeholder="Enter checklist name"
+                  placeholder={t('enterChecklistName')}
                 />
               </div>
               <div className="form-group">
-                <label htmlFor="description">Description</label>
+                <label htmlFor="description">{t('description')}</label>
                 <textarea
                   id="description"
                   value={newChecklist.description}
                   onChange={(e) => setNewChecklist({ ...newChecklist, description: e.target.value })}
-                  placeholder="Enter description"
+                  placeholder={t('enterDescription')}
                   rows={3}
                 />
               </div>
               <div className="form-actions">
                 <button type="button" className="btn btn-secondary" onClick={() => setShowModal(false)}>
-                  Cancel
+                  {t('cancel')}
                 </button>
                 <button type="submit" className="btn btn-primary">
-                  Create
+                  {t('create')}
                 </button>
               </div>
             </form>
@@ -206,27 +208,27 @@ const ChecklistManagement: React.FC = () => {
         <div className="modal-overlay" onClick={() => setShowItemModal(false)}>
           <div className="modal-content" onClick={e => e.stopPropagation()}>
             <div className="modal-header">
-              <h3>Add Checklist Item</h3>
+              <h3>{t('addChecklistItem')}</h3>
               <button className="modal-close" onClick={() => setShowItemModal(false)}>×</button>
             </div>
             <form onSubmit={handleAddItem}>
               <div className="form-group">
-                <label htmlFor="itemDescription">Description *</label>
+                <label htmlFor="itemDescription">{t('description')} *</label>
                 <input
                   type="text"
                   id="itemDescription"
                   value={newItem.description}
                   onChange={(e) => setNewItem({ ...newItem, description: e.target.value })}
                   required
-                  placeholder="Enter item description"
+                  placeholder={t('enterItemDescription')}
                 />
               </div>
               <div className="form-actions">
                 <button type="button" className="btn btn-secondary" onClick={() => setShowItemModal(false)}>
-                  Cancel
+                  {t('cancel')}
                 </button>
                 <button type="submit" className="btn btn-primary">
-                  Add
+                  {t('add')}
                 </button>
               </div>
             </form>

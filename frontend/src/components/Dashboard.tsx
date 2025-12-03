@@ -2,11 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { getStatistics, getInspections } from '../services/api';
 import { Statistics, Inspection, InspectionStatus } from '../types';
+import { useLanguage } from '../contexts/LanguageContext';
 
 const Dashboard: React.FC = () => {
   const [statistics, setStatistics] = useState<Statistics | null>(null);
   const [inspections, setInspections] = useState<Inspection[]>([]);
   const [loading, setLoading] = useState(true);
+  const { t } = useLanguage();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -42,40 +44,40 @@ const Dashboard: React.FC = () => {
   const getStatusLabel = (status: InspectionStatus): string => {
     switch (status) {
       case InspectionStatus.PLANNED:
-        return 'Planned';
+        return t('planned');
       case InspectionStatus.IN_PROGRESS:
-        return 'In Progress';
+        return t('inProgress');
       case InspectionStatus.COMPLETED:
-        return 'Completed';
+        return t('completed');
       default:
         return status;
     }
   };
 
   if (loading) {
-    return <div className="loading">Loading dashboard...</div>;
+    return <div className="loading">{t('loadingDashboard')}</div>;
   }
 
   return (
     <div className="dashboard">
-      <h2>Dashboard</h2>
+      <h2>{t('dashboard')}</h2>
       
       {/* Statistics Cards */}
       <div className="stats-grid">
         <div className="stat-card planned">
-          <h3>Planned</h3>
+          <h3>{t('planned')}</h3>
           <div className="value">{statistics?.planned || 0}</div>
         </div>
         <div className="stat-card in-progress">
-          <h3>In Progress</h3>
+          <h3>{t('inProgress')}</h3>
           <div className="value">{statistics?.inProgress || 0}</div>
         </div>
         <div className="stat-card completed">
-          <h3>Completed</h3>
+          <h3>{t('completed')}</h3>
           <div className="value">{statistics?.completed || 0}</div>
         </div>
         <div className="stat-card total">
-          <h3>Total Inspections</h3>
+          <h3>{t('totalInspections')}</h3>
           <div className="value">{statistics?.total || 0}</div>
         </div>
       </div>
@@ -83,26 +85,26 @@ const Dashboard: React.FC = () => {
       {/* Recent Inspections */}
       <div className="inspection-list">
         <div className="section-header">
-          <h3>Recent Inspections</h3>
+          <h3>{t('recentInspections')}</h3>
           <Link to="/inspections/new" className="btn btn-primary">
-            New Inspection
+            {t('newInspection')}
           </Link>
         </div>
         
         {inspections.length === 0 ? (
           <div className="empty-state">
-            <h3>No inspections yet</h3>
-            <p>Create your first inspection to get started.</p>
+            <h3>{t('noInspectionsYet')}</h3>
+            <p>{t('createFirstInspection')}</p>
           </div>
         ) : (
           <table>
             <thead>
               <tr>
-                <th>Facility</th>
-                <th>Date</th>
-                <th>Employee</th>
-                <th>Status</th>
-                <th>Actions</th>
+                <th>{t('facility')}</th>
+                <th>{t('date')}</th>
+                <th>{t('employee')}</th>
+                <th>{t('status')}</th>
+                <th>{t('actions')}</th>
               </tr>
             </thead>
             <tbody>
@@ -119,11 +121,11 @@ const Dashboard: React.FC = () => {
                   <td>
                     <div className="action-buttons">
                       <Link to={`/inspections/${inspection.id}`} className="btn btn-primary">
-                        View
+                        {t('view')}
                       </Link>
                       {inspection.status !== InspectionStatus.COMPLETED && (
                         <Link to={`/inspections/${inspection.id}/execute`} className="btn btn-success">
-                          {inspection.status === InspectionStatus.PLANNED ? 'Start' : 'Continue'}
+                          {inspection.status === InspectionStatus.PLANNED ? t('start') : t('continue')}
                         </Link>
                       )}
                     </div>

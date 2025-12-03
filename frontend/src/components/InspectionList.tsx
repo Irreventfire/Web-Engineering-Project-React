@@ -2,12 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { getInspections, deleteInspection, updateInspectionStatus } from '../services/api';
 import { Inspection, InspectionStatus } from '../types';
+import { useLanguage } from '../contexts/LanguageContext';
 
 const InspectionList: React.FC = () => {
   const [inspections, setInspections] = useState<Inspection[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<string>('all');
   const navigate = useNavigate();
+  const { t } = useLanguage();
 
   useEffect(() => {
     fetchInspections();
@@ -25,7 +27,7 @@ const InspectionList: React.FC = () => {
   };
 
   const handleDelete = async (id: number) => {
-    if (window.confirm('Are you sure you want to delete this inspection?')) {
+    if (window.confirm(t('deleteInspectionConfirm'))) {
       try {
         await deleteInspection(id);
         setInspections(inspections.filter(i => i.id !== id));
@@ -62,11 +64,11 @@ const InspectionList: React.FC = () => {
   const getStatusLabel = (status: InspectionStatus): string => {
     switch (status) {
       case InspectionStatus.PLANNED:
-        return 'Planned';
+        return t('planned');
       case InspectionStatus.IN_PROGRESS:
-        return 'In Progress';
+        return t('inProgress');
       case InspectionStatus.COMPLETED:
-        return 'Completed';
+        return t('completed');
       default:
         return status;
     }
@@ -78,15 +80,15 @@ const InspectionList: React.FC = () => {
   });
 
   if (loading) {
-    return <div className="loading">Loading inspections...</div>;
+    return <div className="loading">{t('loadingInspections')}</div>;
   }
 
   return (
     <div className="dashboard">
       <div className="section-header">
-        <h2>Inspections</h2>
+        <h2>{t('inspections')}</h2>
         <Link to="/inspections/new" className="btn btn-primary">
-          New Inspection
+          {t('newInspection')}
         </Link>
       </div>
 
@@ -96,29 +98,29 @@ const InspectionList: React.FC = () => {
           onChange={(e) => setFilter(e.target.value)}
           style={{ padding: '0.5rem', borderRadius: '4px', border: '1px solid #dce4ec' }}
         >
-          <option value="all">All Inspections</option>
-          <option value={InspectionStatus.PLANNED}>Planned</option>
-          <option value={InspectionStatus.IN_PROGRESS}>In Progress</option>
-          <option value={InspectionStatus.COMPLETED}>Completed</option>
+          <option value="all">{t('allInspections')}</option>
+          <option value={InspectionStatus.PLANNED}>{t('planned')}</option>
+          <option value={InspectionStatus.IN_PROGRESS}>{t('inProgress')}</option>
+          <option value={InspectionStatus.COMPLETED}>{t('completed')}</option>
         </select>
       </div>
 
       <div className="inspection-list">
         {filteredInspections.length === 0 ? (
           <div className="empty-state">
-            <h3>No inspections found</h3>
-            <p>Create a new inspection to get started.</p>
+            <h3>{t('noInspectionsFound')}</h3>
+            <p>{t('createNewInspection')}</p>
           </div>
         ) : (
           <table>
             <thead>
               <tr>
-                <th>Facility</th>
-                <th>Date</th>
-                <th>Employee</th>
-                <th>Checklist</th>
-                <th>Status</th>
-                <th>Actions</th>
+                <th>{t('facility')}</th>
+                <th>{t('date')}</th>
+                <th>{t('employee')}</th>
+                <th>{t('checklist')}</th>
+                <th>{t('status')}</th>
+                <th>{t('actions')}</th>
               </tr>
             </thead>
             <tbody>
@@ -127,7 +129,7 @@ const InspectionList: React.FC = () => {
                   <td>{inspection.facilityName}</td>
                   <td>{new Date(inspection.inspectionDate).toLocaleDateString()}</td>
                   <td>{inspection.responsibleEmployee}</td>
-                  <td>{inspection.checklist?.name || 'Not assigned'}</td>
+                  <td>{inspection.checklist?.name || t('notAssigned')}</td>
                   <td>
                     <span className={`status-badge ${getStatusClass(inspection.status)}`}>
                       {getStatusLabel(inspection.status)}
@@ -143,35 +145,35 @@ const InspectionList: React.FC = () => {
                             navigate(`/inspections/${inspection.id}/execute`);
                           }}
                         >
-                          Start
+                          {t('start')}
                         </button>
                       )}
                       {inspection.status === InspectionStatus.IN_PROGRESS && (
                         <>
                           <Link to={`/inspections/${inspection.id}/execute`} className="btn btn-warning">
-                            Continue
+                            {t('continue')}
                           </Link>
                           <button
                             className="btn btn-success"
                             onClick={() => handleStatusChange(inspection.id, InspectionStatus.COMPLETED)}
                           >
-                            Complete
+                            {t('complete')}
                           </button>
                         </>
                       )}
                       {inspection.status === InspectionStatus.COMPLETED && (
                         <Link to={`/inspections/${inspection.id}/report`} className="btn btn-primary">
-                          Report
+                          {t('report')}
                         </Link>
                       )}
                       <Link to={`/inspections/${inspection.id}/edit`} className="btn btn-secondary">
-                        Edit
+                        {t('edit')}
                       </Link>
                       <button
                         className="btn btn-danger"
                         onClick={() => handleDelete(inspection.id)}
                       >
-                        Delete
+                        {t('delete')}
                       </button>
                     </div>
                   </td>
