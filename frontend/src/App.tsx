@@ -26,7 +26,7 @@ const AppContent: React.FC = () => {
         <nav className="navbar">
           <h1>{t('inspectionManager')}</h1>
           <div className="language-switcher">
-            <select value={language} onChange={(e) => setLanguage(e.target.value as 'en' | 'de')}>
+            <select value={language} onChange={(e) => setLanguage(e.target.value as 'en' | 'de')} aria-label="Select language">
               <option value="de">{t('german')}</option>
               <option value="en">{t('english')}</option>
             </select>
@@ -65,7 +65,7 @@ const AppContent: React.FC = () => {
         </div>
         <div className="user-info">
           <div className="language-switcher">
-            <select value={language} onChange={(e) => setLanguage(e.target.value as 'en' | 'de')}>
+            <select value={language} onChange={(e) => setLanguage(e.target.value as 'en' | 'de')} aria-label="Select language">
               <option value="de">{t('german')}</option>
               <option value="en">{t('english')}</option>
             </select>
