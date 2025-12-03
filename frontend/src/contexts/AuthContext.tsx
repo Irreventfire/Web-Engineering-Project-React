@@ -7,6 +7,8 @@ interface AuthContextType {
   logout: () => void;
   isAuthenticated: boolean;
   isAdmin: boolean;
+  isViewer: boolean;
+  canEdit: boolean;
   hasRole: (role: UserRole) => boolean;
 }
 
@@ -44,6 +46,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const isAuthenticated = !!user && user.enabled;
   const isAdmin = user?.role === UserRole.ADMIN;
+  const isViewer = user?.role === UserRole.VIEWER;
+  const canEdit = user?.role === UserRole.ADMIN || user?.role === UserRole.USER;
 
   /**
    * Check if the current user has access to a given role level.
@@ -63,7 +67,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, isAuthenticated, isAdmin, hasRole }}>
+    <AuthContext.Provider value={{ user, login, logout, isAuthenticated, isAdmin, isViewer, canEdit, hasRole }}>
       {children}
     </AuthContext.Provider>
   );

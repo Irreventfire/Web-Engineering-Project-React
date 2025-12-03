@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { getChecklists, createChecklist, deleteChecklist, addChecklistItem, deleteChecklistItem } from '../services/api';
-import { Checklist } from '../types';
+import { getChecklists, createChecklist, deleteChecklist, addChecklistItem, deleteChecklistItem, uploadFile, updateChecklistItem } from '../services/api';
+import { Checklist, ChecklistItem } from '../types';
 import { useLanguage } from '../contexts/LanguageContext';
+import { useAuth } from '../contexts/AuthContext';
+
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8080/api';
 
 const ChecklistManagement: React.FC = () => {
   const [checklists, setChecklists] = useState<Checklist[]>([]);
@@ -10,8 +13,10 @@ const ChecklistManagement: React.FC = () => {
   const [showItemModal, setShowItemModal] = useState(false);
   const [selectedChecklist, setSelectedChecklist] = useState<Checklist | null>(null);
   const [newChecklist, setNewChecklist] = useState({ name: '', description: '' });
-  const [newItem, setNewItem] = useState({ description: '', orderIndex: 0 });
+  const [newItem, setNewItem] = useState({ description: '', orderIndex: 0, desiredPhotoUrl: '' });
+  const [uploading, setUploading] = useState(false);
   const { t } = useLanguage();
+  const { canEdit } = useAuth();
 
   useEffect(() => {
     fetchChecklists();
@@ -68,7 +73,7 @@ const ChecklistManagement: React.FC = () => {
           : c
       ));
       
-      setNewItem({ description: '', orderIndex: 0 });
+      setNewItem({ description: '', orderIndex: 0, desiredPhotoUrl: '' });
       setShowItemModal(false);
       setSelectedChecklist(null);
     } catch (error) {
@@ -91,7 +96,33 @@ const ChecklistManagement: React.FC = () => {
 
   const openAddItemModal = (checklist: Checklist) => {
     setSelectedChecklist(checklist);
+    setNewItem({ description: '', orderIndex: 0, desiredPhotoUrl: '' });
     setShowItemModal(true);
+  };
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>, isNewItem: boolean, item?: ChecklistItem, checklistId?: number) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploading(true);
+    try {
+      const result = await uploadFile(file);
+      if (isNewItem) {
+        setNewItem({ ...newItem, desiredPhotoUrl: result.url });
+      } else if (item && checklistId) {
+        // Update existing item with new photo
+        await updateChecklistItem(item.id, { desiredPhotoUrl: result.url });
+        setChecklists(checklists.map(c => 
+          c.id === checklistId 
+            ? { ...c, items: c.items.map(i => i.id === item.id ? { ...i, desiredPhotoUrl: result.url } : i) }
+            : c
+        ));
+      }
+    } catch (error) {
+      console.error('Error uploading file:', error);
+    } finally {
+      setUploading(false);
+    }
   };
 
   if (loading) {
@@ -102,9 +133,11 @@ const ChecklistManagement: React.FC = () => {
     <div className="checklist-container">
       <div className="section-header">
         <h2>{t('checklists')}</h2>
-        <button className="btn btn-primary" onClick={() => setShowModal(true)}>
-          {t('newChecklist')}
-        </button>
+        {canEdit && (
+          <button className="btn btn-primary" onClick={() => setShowModal(true)}>
+            {t('newChecklist')}
+          </button>
+        )}
       </div>
 
       {checklists.length === 0 ? (
@@ -125,36 +158,66 @@ const ChecklistManagement: React.FC = () => {
                   <p style={{ color: '#7f8c8d', fontStyle: 'italic' }}>{t('noItemsYet')}</p>
                 ) : (
                   checklist.items.map(item => (
-                    <div key={item.id} className="checklist-item">
-                      <span className="item-number">{item.orderIndex}</span>
-                      <span>{item.description}</span>
-                      <button 
-                        className="btn btn-danger" 
-                        style={{ padding: '0.25rem 0.5rem', fontSize: '0.75rem' }}
-                        onClick={() => handleDeleteItem(checklist.id, item.id)}
-                      >
-                        ✕
-                      </button>
+                    <div key={item.id} className="checklist-item" style={{ flexDirection: 'column', alignItems: 'flex-start' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', width: '100%' }}>
+                        <span className="item-number">{item.orderIndex}</span>
+                        <span style={{ flex: 1 }}>{item.description}</span>
+                        {canEdit && (
+                          <button 
+                            className="btn btn-danger" 
+                            style={{ padding: '0.25rem 0.5rem', fontSize: '0.75rem' }}
+                            onClick={() => handleDeleteItem(checklist.id, item.id)}
+                          >
+                            ✕
+                          </button>
+                        )}
+                      </div>
+                      {item.desiredPhotoUrl && (
+                        <div style={{ marginTop: '0.5rem', marginLeft: '2rem' }}>
+                          <img 
+                            src={`${API_BASE_URL}${item.desiredPhotoUrl.replace('/api', '')}`}
+                            alt={t('desiredState')} 
+                            style={{ maxWidth: '150px', maxHeight: '100px', borderRadius: '4px', border: '1px solid #dce4ec' }}
+                          />
+                          <span style={{ display: 'block', fontSize: '0.75rem', color: '#7f8c8d' }}>{t('desiredState')}</span>
+                        </div>
+                      )}
+                      {canEdit && !item.desiredPhotoUrl && (
+                        <div className="photo-upload" style={{ marginTop: '0.5rem', marginLeft: '2rem' }}>
+                          <input
+                            type="file"
+                            id={`item-photo-${item.id}`}
+                            accept="image/*"
+                            onChange={(e) => handleFileUpload(e, false, item, checklist.id)}
+                            disabled={uploading}
+                          />
+                          <label htmlFor={`item-photo-${item.id}`} className="photo-upload-label">
+                            📷 {t('uploadDesiredPhoto')}
+                          </label>
+                        </div>
+                      )}
                     </div>
                   ))
                 )}
               </div>
-              <div style={{ padding: '1rem', borderTop: '1px solid #e9ecef' }}>
-                <div className="action-buttons">
-                  <button 
-                    className="btn btn-primary" 
-                    onClick={() => openAddItemModal(checklist)}
-                  >
-                    {t('addItem')}
-                  </button>
-                  <button 
-                    className="btn btn-danger" 
-                    onClick={() => handleDeleteChecklist(checklist.id)}
-                  >
-                    {t('delete')}
-                  </button>
+              {canEdit && (
+                <div style={{ padding: '1rem', borderTop: '1px solid #e9ecef' }}>
+                  <div className="action-buttons">
+                    <button 
+                      className="btn btn-primary" 
+                      onClick={() => openAddItemModal(checklist)}
+                    >
+                      {t('addItem')}
+                    </button>
+                    <button 
+                      className="btn btn-danger" 
+                      onClick={() => handleDeleteChecklist(checklist.id)}
+                    >
+                      {t('delete')}
+                    </button>
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
           ))}
         </div>
@@ -223,11 +286,35 @@ const ChecklistManagement: React.FC = () => {
                   placeholder={t('enterItemDescription')}
                 />
               </div>
+              <div className="form-group">
+                <label>{t('desiredStatePhoto')}</label>
+                <div className="photo-upload">
+                  <input
+                    type="file"
+                    id="newItemPhoto"
+                    accept="image/*"
+                    onChange={(e) => handleFileUpload(e, true)}
+                    disabled={uploading}
+                  />
+                  <label htmlFor="newItemPhoto" className="photo-upload-label">
+                    📷 {uploading ? t('uploading') : t('uploadPhoto')}
+                  </label>
+                </div>
+                {newItem.desiredPhotoUrl && (
+                  <div style={{ marginTop: '0.5rem' }}>
+                    <img 
+                      src={`${API_BASE_URL}${newItem.desiredPhotoUrl.replace('/api', '')}`}
+                      alt={t('desiredState')} 
+                      style={{ maxWidth: '200px', maxHeight: '150px', borderRadius: '4px', border: '1px solid #dce4ec' }}
+                    />
+                  </div>
+                )}
+              </div>
               <div className="form-actions">
                 <button type="button" className="btn btn-secondary" onClick={() => setShowItemModal(false)}>
                   {t('cancel')}
                 </button>
-                <button type="submit" className="btn btn-primary">
+                <button type="submit" className="btn btn-primary" disabled={uploading}>
                   {t('add')}
                 </button>
               </div>

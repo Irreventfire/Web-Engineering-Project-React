@@ -16,6 +16,9 @@ public class ChecklistItem {
     
     private int orderIndex;
     
+    @Column(length = 500)
+    private String desiredPhotoUrl;
+    
     @ManyToOne
     @JoinColumn(name = "checklist_id")
     @JsonIgnore
@@ -38,6 +41,9 @@ public class ChecklistItem {
     
     public int getOrderIndex() { return orderIndex; }
     public void setOrderIndex(int orderIndex) { this.orderIndex = orderIndex; }
+    
+    public String getDesiredPhotoUrl() { return desiredPhotoUrl; }
+    public void setDesiredPhotoUrl(String desiredPhotoUrl) { this.desiredPhotoUrl = desiredPhotoUrl; }
     
     public Checklist getChecklist() { return checklist; }
     public void setChecklist(Checklist checklist) { this.checklist = checklist; }

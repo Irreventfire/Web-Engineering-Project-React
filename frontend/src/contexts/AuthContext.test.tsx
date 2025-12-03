@@ -5,12 +5,14 @@ import { UserRole } from '../types';
 
 // Test component that displays auth state
 const TestComponent: React.FC = () => {
-  const { user, isAuthenticated, isAdmin, login, logout, hasRole } = useAuth();
+  const { user, isAuthenticated, isAdmin, isViewer, canEdit, login, logout, hasRole } = useAuth();
   
   return (
     <div>
       <span data-testid="authenticated">{isAuthenticated ? 'true' : 'false'}</span>
       <span data-testid="isAdmin">{isAdmin ? 'true' : 'false'}</span>
+      <span data-testid="isViewer">{isViewer ? 'true' : 'false'}</span>
+      <span data-testid="canEdit">{canEdit ? 'true' : 'false'}</span>
       <span data-testid="username">{user?.username || 'none'}</span>
       <span data-testid="hasAdminRole">{hasRole(UserRole.ADMIN) ? 'true' : 'false'}</span>
       <span data-testid="hasUserRole">{hasRole(UserRole.USER) ? 'true' : 'false'}</span>
@@ -25,6 +27,12 @@ const TestComponent: React.FC = () => {
         onClick={() => login({ id: 2, username: 'user', email: 'user@test.com', role: UserRole.USER, enabled: true })}
       >
         Login User
+      </button>
+      <button 
+        data-testid="loginViewer"
+        onClick={() => login({ id: 3, username: 'viewer', email: 'viewer@test.com', role: UserRole.VIEWER, enabled: true })}
+      >
+        Login Viewer
       </button>
       <button data-testid="logout" onClick={logout}>Logout</button>
     </div>
@@ -93,6 +101,40 @@ describe('AuthContext', () => {
     expect(screen.getByTestId('hasAdminRole')).toHaveTextContent('false');
     expect(screen.getByTestId('hasUserRole')).toHaveTextContent('true');
     expect(screen.getByTestId('isAdmin')).toHaveTextContent('false');
+    expect(screen.getByTestId('canEdit')).toHaveTextContent('true');
+  });
+
+  test('viewer cannot edit', () => {
+    render(
+      <AuthProvider>
+        <TestComponent />
+      </AuthProvider>
+    );
+    
+    act(() => {
+      fireEvent.click(screen.getByTestId('loginViewer'));
+    });
+    
+    expect(screen.getByTestId('isViewer')).toHaveTextContent('true');
+    expect(screen.getByTestId('canEdit')).toHaveTextContent('false');
+    expect(screen.getByTestId('isAdmin')).toHaveTextContent('false');
+    expect(screen.getByTestId('hasAdminRole')).toHaveTextContent('false');
+    expect(screen.getByTestId('hasUserRole')).toHaveTextContent('false');
+  });
+
+  test('admin can edit', () => {
+    render(
+      <AuthProvider>
+        <TestComponent />
+      </AuthProvider>
+    );
+    
+    act(() => {
+      fireEvent.click(screen.getByTestId('loginAdmin'));
+    });
+    
+    expect(screen.getByTestId('canEdit')).toHaveTextContent('true');
+    expect(screen.getByTestId('isViewer')).toHaveTextContent('false');
   });
 
   test('logout clears user state', () => {
