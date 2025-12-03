@@ -10,7 +10,12 @@ const api = axios.create({
   },
 });
 
-// Add interceptor to include user ID in requests
+/**
+ * Request interceptor to include user ID in headers.
+ * NOTE: This is a simplified demo implementation. In production,
+ * use server-side session tokens or JWT for secure authentication.
+ * The current approach using localStorage is vulnerable to client-side manipulation.
+ */
 api.interceptors.request.use((config) => {
   const userStr = localStorage.getItem('user');
   if (userStr) {

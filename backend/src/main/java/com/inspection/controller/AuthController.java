@@ -39,7 +39,10 @@ public class AuthController {
         
         User user = userOpt.get();
         
-        // Simple password check (in production, use BCrypt)
+        // NOTE: This is a simplified demo implementation with plain text passwords.
+        // In production, use BCrypt or another secure hashing algorithm:
+        // BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        // if (!encoder.matches(password, user.getPassword())) { ... }
         if (!user.getPassword().equals(password)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "Invalid credentials"));
         }
