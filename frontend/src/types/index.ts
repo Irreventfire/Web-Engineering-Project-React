@@ -10,6 +10,12 @@ export enum ResultStatus {
   NOT_APPLICABLE = 'NOT_APPLICABLE'
 }
 
+export enum UserRole {
+  ADMIN = 'ADMIN',
+  USER = 'USER',
+  VIEWER = 'VIEWER'
+}
+
 export interface ChecklistItem {
   id: number;
   description: string;
@@ -46,4 +52,12 @@ export interface Statistics {
   inProgress: number;
   completed: number;
   total: number;
+}
+
+export interface User {
+  id: number;
+  username: string;
+  email: string;
+  role: UserRole;
+  enabled: boolean;
 }

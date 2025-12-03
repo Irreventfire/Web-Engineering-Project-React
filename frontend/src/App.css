@@ -638,3 +638,175 @@ tr:hover {
     padding: 0;
   }
 }
+
+/* Login Styles */
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 150px);
+}
+
+.login-card {
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  width: 100%;
+  max-width: 400px;
+}
+
+.login-card h2 {
+  margin: 0 0 1.5rem 0;
+  text-align: center;
+  color: #2c3e50;
+}
+
+.btn-full {
+  width: 100%;
+  padding: 0.75rem;
+  font-size: 1rem;
+}
+
+.login-info {
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e9ecef;
+  font-size: 0.85rem;
+  color: #7f8c8d;
+  text-align: center;
+}
+
+.login-info p {
+  margin: 0.25rem 0;
+}
+
+/* Error Message */
+.error-message {
+  background-color: #fde2e2;
+  border: 1px solid #e74c3c;
+  color: #c0392b;
+  padding: 0.75rem 1rem;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+}
+
+/* User Info in Navbar */
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.user-name {
+  color: #ecf0f1;
+  font-size: 0.9rem;
+}
+
+.btn-logout {
+  padding: 0.4rem 0.75rem;
+  font-size: 0.85rem;
+}
+
+/* Admin Dashboard Styles */
+.admin-dashboard {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.admin-dashboard h2 {
+  color: #2c3e50;
+  margin-bottom: 1.5rem;
+}
+
+.user-list {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  overflow-x: auto;
+}
+
+.user-list table {
+  min-width: 800px;
+}
+
+/* Role Badge */
+.role-badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.role-badge.admin {
+  background-color: #fce4ec;
+  color: #c2185b;
+}
+
+.role-badge.user {
+  background-color: #e3f2fd;
+  color: #1976d2;
+}
+
+.role-badge.viewer {
+  background-color: #f3e5f5;
+  color: #7b1fa2;
+}
+
+/* Status Badge for users */
+.status-badge.enabled {
+  background-color: #e8f5e9;
+  color: #388e3c;
+}
+
+.status-badge.disabled {
+  background-color: #fde2e2;
+  color: #c0392b;
+}
+
+/* Disabled row */
+.disabled-row {
+  opacity: 0.6;
+  background-color: #f8f9fa;
+}
+
+/* You badge */
+.you-badge {
+  margin-left: 0.5rem;
+  font-size: 0.75rem;
+  color: #7f8c8d;
+  font-style: italic;
+}
+
+/* Role select */
+.role-select {
+  padding: 0.35rem 0.5rem;
+  border: 1px solid #dce4ec;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.no-actions {
+  color: #7f8c8d;
+  font-style: italic;
+  font-size: 0.85rem;
+}
+
+/* Responsive adjustments for login and admin */
+@media (max-width: 768px) {
+  .user-info {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .login-card {
+    margin: 1rem;
+  }
+
+  .admin-dashboard .action-buttons {
+    flex-direction: column;
+  }
+}
