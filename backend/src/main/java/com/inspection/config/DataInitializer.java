@@ -12,15 +12,35 @@ public class DataInitializer implements CommandLineRunner {
     
     private final InspectionRepository inspectionRepository;
     private final ChecklistRepository checklistRepository;
+    private final UserRepository userRepository;
     
     public DataInitializer(InspectionRepository inspectionRepository,
-                          ChecklistRepository checklistRepository) {
+                          ChecklistRepository checklistRepository,
+                          UserRepository userRepository) {
         this.inspectionRepository = inspectionRepository;
         this.checklistRepository = checklistRepository;
+        this.userRepository = userRepository;
     }
     
     @Override
     public void run(String... args) {
+        // Create default admin user if not exists
+        if (!userRepository.existsByUsername("admin")) {
+            User admin = new User("admin", "admin123", "admin@example.com", UserRole.ADMIN);
+            userRepository.save(admin);
+        }
+        
+        // Create default user if not exists
+        if (!userRepository.existsByUsername("user")) {
+            User user = new User("user", "user123", "user@example.com", UserRole.USER);
+            userRepository.save(user);
+        }
+        
+        // Create default viewer if not exists
+        if (!userRepository.existsByUsername("viewer")) {
+            User viewer = new User("viewer", "viewer123", "viewer@example.com", UserRole.VIEWER);
+            userRepository.save(viewer);
+        }
         // Create sample checklists
         Checklist safetyChecklist = new Checklist("Safety Inspection Checklist", "Standard safety inspection for industrial facilities");
         safetyChecklist.addItem(new ChecklistItem("Fire extinguisher present and accessible", 1));

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { Inspection, Checklist, ChecklistItem, Result, Statistics } from '../types';
+import { Inspection, Checklist, ChecklistItem, Result, Statistics, User, UserRole } from '../types';
 
 const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8080/api';
 
@@ -9,6 +9,31 @@ const api = axios.create({
     'Content-Type': 'application/json',
   },
 });
+
+// Add interceptor to include user ID in requests
+api.interceptors.request.use((config) => {
+  const userStr = localStorage.getItem('user');
+  if (userStr) {
+    const user = JSON.parse(userStr);
+    config.headers['X-User-Id'] = user.id;
+  }
+  return config;
+});
+
+// Auth endpoints
+export const login = (username: string, password: string) => 
+  api.post<User>('/auth/login', { username, password });
+export const register = (username: string, password: string, email: string) => 
+  api.post<User>('/auth/register', { username, password, email });
+
+// User management endpoints (admin only)
+export const getUsers = () => api.get<User[]>('/users');
+export const getUser = (id: number) => api.get<User>(`/users/${id}`);
+export const updateUserRole = (id: number, role: UserRole) => 
+  api.put<User>(`/users/${id}/role`, { role });
+export const updateUserEnabled = (id: number, enabled: boolean) => 
+  api.put<User>(`/users/${id}/enabled`, { enabled });
+export const deleteUser = (id: number) => api.delete(`/users/${id}`);
 
 // Inspection endpoints
 export const getInspections = () => api.get<Inspection[]>('/inspections');
