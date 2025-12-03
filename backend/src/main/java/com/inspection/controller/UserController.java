@@ -3,6 +3,7 @@ package com.inspection.controller;
 import com.inspection.model.User;
 import com.inspection.model.UserRole;
 import com.inspection.repository.UserRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,6 +35,47 @@ public class UserController {
         return userRepository.findById(id)
                 .map(user -> ResponseEntity.ok(toUserResponse(user)))
                 .orElse(ResponseEntity.notFound().build());
+    }
+    
+    @PostMapping
+    public ResponseEntity<?> createUser(@RequestBody Map<String, String> userData) {
+        String username = userData.get("username");
+        String password = userData.get("password");
+        String email = userData.get("email");
+        String roleStr = userData.get("role");
+        
+        if (username == null || password == null || email == null) {
+            return ResponseEntity.badRequest().body(Map.of("error", "Username, password and email are required"));
+        }
+        
+        // Validate password length (minimum 6 characters for demo purposes)
+        if (password.length() < 6) {
+            return ResponseEntity.badRequest().body(Map.of("error", "Password must be at least 6 characters"));
+        }
+        
+        if (userRepository.existsByUsername(username)) {
+            return ResponseEntity.badRequest().body(Map.of("error", "Username already exists"));
+        }
+        
+        if (userRepository.existsByEmail(email)) {
+            return ResponseEntity.badRequest().body(Map.of("error", "Email already exists"));
+        }
+        
+        UserRole role = UserRole.USER;
+        if (roleStr != null) {
+            try {
+                role = UserRole.valueOf(roleStr);
+            } catch (IllegalArgumentException e) {
+                return ResponseEntity.badRequest().body(Map.of("error", "Invalid role"));
+            }
+        }
+        
+        // NOTE: This is a simplified demo implementation with plain text passwords.
+        // In production, use BCrypt or another secure hashing algorithm.
+        User newUser = new User(username, password, email, role);
+        User savedUser = userRepository.save(newUser);
+        
+        return ResponseEntity.status(HttpStatus.CREATED).body(toUserResponse(savedUser));
     }
     
     @PutMapping("/{id}/role")

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import { useLanguage } from '../contexts/LanguageContext';
 import { login as loginApi } from '../services/api';
 
 const Login: React.FC = () => {
@@ -9,6 +10,7 @@ const Login: React.FC = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const { login } = useAuth();
+  const { t } = useLanguage();
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -23,9 +25,9 @@ const Login: React.FC = () => {
     } catch (err: unknown) {
       if (err && typeof err === 'object' && 'response' in err) {
         const axiosError = err as { response?: { data?: { error?: string } } };
-        setError(axiosError.response?.data?.error || 'Login failed');
+        setError(axiosError.response?.data?.error || t('loginFailed'));
       } else {
-        setError('Login failed. Please try again.');
+        setError(t('loginFailed'));
       }
     } finally {
       setLoading(false);
@@ -35,39 +37,39 @@ const Login: React.FC = () => {
   return (
     <div className="login-container">
       <div className="login-card">
-        <h2>Login</h2>
+        <h2>{t('login')}</h2>
         {error && <div className="error-message">{error}</div>}
         <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label htmlFor="username">Username</label>
+            <label htmlFor="username">{t('username')}</label>
             <input
               type="text"
               id="username"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               required
-              placeholder="Enter username"
+              placeholder={t('enterUsername')}
               autoComplete="username"
             />
           </div>
           <div className="form-group">
-            <label htmlFor="password">Password</label>
+            <label htmlFor="password">{t('password')}</label>
             <input
               type="password"
               id="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              placeholder="Enter password"
+              placeholder={t('enterPassword')}
               autoComplete="current-password"
             />
           </div>
           <button type="submit" className="btn btn-primary btn-full" disabled={loading}>
-            {loading ? 'Logging in...' : 'Login'}
+            {loading ? t('loggingIn') : t('loginButton')}
           </button>
         </form>
         <div className="login-info">
-          <p><strong>Demo Accounts:</strong></p>
+          <p><strong>{t('demoAccounts')}</strong></p>
           <p>Admin: admin / admin123</p>
           <p>User: user / user123</p>
           <p>Viewer: viewer / viewer123</p>

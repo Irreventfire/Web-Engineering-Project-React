@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, NavLink, Navigate } from 'react
 import './App.css';
 
 import { AuthProvider, useAuth } from './contexts/AuthContext';
+import { LanguageProvider, useLanguage } from './contexts/LanguageContext';
 import Dashboard from './components/Dashboard';
 import InspectionList from './components/InspectionList';
 import InspectionForm from './components/InspectionForm';
@@ -12,16 +13,24 @@ import ChecklistManagement from './components/ChecklistManagement';
 import Login from './components/Login';
 import AdminDashboard from './components/AdminDashboard';
 import ProtectedRoute from './components/ProtectedRoute';
+import Footer from './components/Footer';
 import { UserRole } from './types';
 
 const AppContent: React.FC = () => {
   const { isAuthenticated, isAdmin, user, logout } = useAuth();
+  const { t, language, setLanguage } = useLanguage();
 
   if (!isAuthenticated) {
     return (
       <div className="app">
         <nav className="navbar">
-          <h1>Inspection Manager</h1>
+          <h1>{t('inspectionManager')}</h1>
+          <div className="language-switcher">
+            <select value={language} onChange={(e) => setLanguage(e.target.value as 'en' | 'de')}>
+              <option value="de">{t('german')}</option>
+              <option value="en">{t('english')}</option>
+            </select>
+          </div>
         </nav>
         <main className="main-content">
           <Routes>
@@ -29,6 +38,7 @@ const AppContent: React.FC = () => {
             <Route path="*" element={<Navigate to="/login" replace />} />
           </Routes>
         </main>
+        <Footer />
       </div>
     );
   }
@@ -36,27 +46,33 @@ const AppContent: React.FC = () => {
   return (
     <div className="app">
       <nav className="navbar">
-        <h1>Inspection Manager</h1>
+        <h1>{t('inspectionManager')}</h1>
         <div className="nav-links">
           <NavLink to="/" className={({ isActive }) => isActive ? 'active' : ''}>
-            Dashboard
+            {t('dashboard')}
           </NavLink>
           <NavLink to="/inspections" className={({ isActive }) => isActive ? 'active' : ''}>
-            Inspections
+            {t('inspections')}
           </NavLink>
           <NavLink to="/checklists" className={({ isActive }) => isActive ? 'active' : ''}>
-            Checklists
+            {t('checklists')}
           </NavLink>
           {isAdmin && (
             <NavLink to="/admin" className={({ isActive }) => isActive ? 'active' : ''}>
-              Admin
+              {t('admin')}
             </NavLink>
           )}
         </div>
         <div className="user-info">
+          <div className="language-switcher">
+            <select value={language} onChange={(e) => setLanguage(e.target.value as 'en' | 'de')}>
+              <option value="de">{t('german')}</option>
+              <option value="en">{t('english')}</option>
+            </select>
+          </div>
           <span className="user-name">{user?.username} ({user?.role})</span>
           <button className="btn btn-secondary btn-logout" onClick={logout}>
-            Logout
+            {t('logout')}
           </button>
         </div>
       </nav>
@@ -82,6 +98,7 @@ const AppContent: React.FC = () => {
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>
+      <Footer />
     </div>
   );
 };
@@ -89,9 +106,11 @@ const AppContent: React.FC = () => {
 function App() {
   return (
     <Router>
-      <AuthProvider>
-        <AppContent />
-      </AuthProvider>
+      <LanguageProvider>
+        <AuthProvider>
+          <AppContent />
+        </AuthProvider>
+      </LanguageProvider>
     </Router>
   );
 }
