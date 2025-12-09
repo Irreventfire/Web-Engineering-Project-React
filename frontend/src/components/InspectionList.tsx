@@ -137,7 +137,7 @@ const InspectionList: React.FC = () => {
                     </div>
                   </div>
                   <div className="inspection-meta">
-                    <span className="date-badge">📅 {new Date(inspection.inspectionDate).toLocaleDateString()}</span>
+                    <span className="date-badge">{new Date(inspection.inspectionDate).toLocaleDateString()}</span>
                     <span className={`status-badge-modern ${getStatusClass(inspection.status)}`}>
                       {getStatusLabel(inspection.status)}
                     </span>
@@ -172,13 +172,13 @@ const InspectionList: React.FC = () => {
                             navigate(`/inspections/${inspection.id}/execute`);
                           }}
                         >
-                          ▶ {t('start')}
+                          ▸ {t('start')}
                         </button>
                       )}
                       {canEdit && inspection.status === InspectionStatus.IN_PROGRESS && (
                         <>
                           <Link to={`/inspections/${inspection.id}/execute`} className="btn-action btn-warning">
-                            ⏵ {t('continue')}
+                            ▸ {t('continue')}
                           </Link>
                           <button
                             className="btn-action btn-success"
@@ -190,12 +190,12 @@ const InspectionList: React.FC = () => {
                       )}
                       {inspection.status === InspectionStatus.COMPLETED && (
                         <Link to={`/inspections/${inspection.id}/report`} className="btn-action btn-primary">
-                          📄 {t('report')}
+                          ≡ {t('report')}
                         </Link>
                       )}
                       {canEdit && (
                         <Link to={`/inspections/${inspection.id}/edit`} className="btn-action btn-secondary">
-                          ✏️ {t('edit')}
+                          ✎ {t('edit')}
                         </Link>
                       )}
                       {canEdit && (
@@ -203,7 +203,7 @@ const InspectionList: React.FC = () => {
                           className="btn-action btn-danger"
                           onClick={() => handleDelete(inspection.id)}
                         >
-                          🗑️ {t('delete')}
+                          × {t('delete')}
                         </button>
                       )}
                     </div>

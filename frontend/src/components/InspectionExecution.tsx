@@ -216,7 +216,7 @@ const InspectionExecution: React.FC = () => {
                 
                 <div className="result-options">
                   <button
-                    className={`result-option ${result?.status === ResultStatus.FULFILLED ? 'selected fulfilled' : ''}`}
+                    className={`status-button ${result?.status === ResultStatus.FULFILLED ? 'active' : ''}`}
                     onClick={() => handleStatusChange(item, ResultStatus.FULFILLED)}
                   >
                     ✓ {t('fulfilled')}
@@ -264,7 +264,7 @@ const InspectionExecution: React.FC = () => {
                         disabled={uploading === item.id}
                       />
                       <label htmlFor={`photo-${item.id}`} className="photo-upload-label">
-                        📷 {uploading === item.id ? t('uploading') : t('uploadCurrentStatePhoto')}
+                        ⌕ {uploading === item.id ? t('uploading') : t('uploadCurrentStatePhoto')}
                       </label>
                     </div>
                   )}

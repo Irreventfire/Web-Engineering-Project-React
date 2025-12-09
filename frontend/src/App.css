@@ -68,9 +68,15 @@
 .stat-card {
   background: white;
   padding: 1.5rem;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
   text-align: center;
+  transition: box-shadow 0.3s ease, transform 0.2s ease;
+}
+
+.stat-card:hover {
+  box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+  transform: translateY(-2px);
 }
 
 .stat-card h3 {
@@ -85,11 +91,6 @@
   color: #2c3e50;
 }
 
-.stat-card.planned .value { color: #3498db; }
-.stat-card.in-progress .value { color: #f39c12; }
-.stat-card.completed .value { color: #27ae60; }
-.stat-card.total .value { color: #9b59b6; }
-
 .section-header {
   display: flex;
   justify-content: space-between;
@@ -97,17 +98,23 @@
   padding: 1rem 1.5rem;
   background-color: #f8f9fa;
   border-bottom: 1px solid #e9ecef;
+  border-radius: 8px 8px 0 0;
 }
 
 .section-header h3 {
   margin: 0;
   color: #2c3e50;
+  font-size: 1.1rem;
 }
 
 /* Table Styles */
 table {
   width: 100%;
   border-collapse: collapse;
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
 }
 
 th, td {
@@ -117,13 +124,17 @@ th, td {
 }
 
 th {
-  background-color: #f8f9fa;
+  background-color: #546e7a;
   font-weight: 600;
-  color: #2c3e50;
+  color: white;
 }
 
-tr:hover {
+tbody tr:hover {
   background-color: #f8f9fa;
+}
+
+tbody tr:last-child td {
+  border-bottom: none;
 }
 
 /* Status Badge */
@@ -247,6 +258,20 @@ tr:hover {
   border-radius: 4px;
   font-size: 1rem;
   box-sizing: border-box;
+  background-color: #ffffff;
+  color: #2c3e50;
+}
+
+/* Ensure date input is visible */
+.form-group input[type="date"] {
+  color: #2c3e50;
+  background-color: #ffffff;
+  color-scheme: light;
+}
+
+.form-group input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(0);
+  opacity: 1;
 }
 
 .form-group input:focus,
@@ -1373,11 +1398,34 @@ tr:hover {
 }
 
 .date-badge {
-  background: rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.9);
   padding: 0.35rem 0.75rem;
   border-radius: 20px;
   font-size: 0.85rem;
   font-weight: 500;
+  color: #2c3e50;
+}
+
+/* Date input styling for dark backgrounds */
+.inspection-header-modern input[type="date"],
+.inspection-header input[type="date"],
+.date-badge input[type="date"] {
+  background-color: rgba(255, 255, 255, 0.95);
+  color: #2c3e50;
+  border: none;
+  padding: 0.35rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color-scheme: light;
+}
+
+.inspection-header-modern input[type="date"]::-webkit-calendar-picker-indicator,
+.inspection-header input[type="date"]::-webkit-calendar-picker-indicator,
+.date-badge input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(0) brightness(1);
+  opacity: 1;
+  cursor: pointer;
 }
 
 .status-badge-modern {

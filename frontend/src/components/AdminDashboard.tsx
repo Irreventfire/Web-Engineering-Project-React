@@ -335,13 +335,13 @@ const AdminDashboard: React.FC = () => {
                           className={`btn-action ${user.enabled ? 'btn-warning' : 'btn-success'}`}
                           onClick={() => handleToggleEnabled(user.id, !user.enabled)}
                         >
-                          {user.enabled ? '⏸ ' + t('disable') : '▶ ' + t('enable')}
+                          {user.enabled ? '⏸ ' + t('disable') : '▸ ' + t('enable')}
                         </button>
                         <button
                           className="btn-action btn-danger"
                           onClick={() => handleDeleteUser(user.id)}
                         >
-                          🗑️ {t('delete')}
+                          × {t('delete')}
                         </button>
                       </div>
                     </div>

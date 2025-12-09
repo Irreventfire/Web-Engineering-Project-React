@@ -214,14 +214,14 @@ const ChecklistManagement: React.FC = () => {
                           onClick={() => openEditChecklistModal(checklist)}
                           title={t('edit')}
                         >
-                          ✏️
+                          ✎
                         </button>
                         <button 
                           className="btn-icon btn-delete" 
                           onClick={() => handleDeleteChecklist(checklist.id)}
                           title={t('delete')}
                         >
-                          🗑️
+                          ×
                         </button>
                       </div>
                     )}
@@ -248,7 +248,7 @@ const ChecklistManagement: React.FC = () => {
                                     alt={t('desiredState')} 
                                     className="thumbnail-image"
                                   />
-                                  <span className="photo-label">📷</span>
+                                  <span className="photo-label">⌕</span>
                                 </div>
                               )}
                             </div>
@@ -259,7 +259,7 @@ const ChecklistManagement: React.FC = () => {
                                   onClick={() => openEditItemModal(checklist, item)}
                                   title={t('edit')}
                                 >
-                                  ✏️
+                                  ✎
                                 </button>
                                 <button 
                                   className="btn-icon-small btn-delete-small" 
@@ -366,7 +366,7 @@ const ChecklistManagement: React.FC = () => {
                     disabled={uploading}
                   />
                   <label htmlFor="newItemPhoto" className="photo-upload-label">
-                    📷 {uploading ? t('uploading') : t('uploadPhoto')}
+                    ⌕ {uploading ? t('uploading') : t('uploadPhoto')}
                   </label>
                 </div>
                 {newItem.desiredPhotoUrl && (
