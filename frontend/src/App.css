@@ -1083,7 +1083,7 @@ tr:hover {
 
 .checklist-header-modern {
   padding: 1.25rem 1.5rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #546e7a;
   color: white;
   cursor: pointer;
   display: flex;
@@ -1194,8 +1194,8 @@ tr:hover {
 }
 
 .item-row-modern:hover {
-  border-color: #667eea;
-  box-shadow: 0 2px 6px rgba(102, 126, 234, 0.15);
+  border-color: #546e7a;
+  box-shadow: 0 2px 6px rgba(84, 110, 122, 0.15);
 }
 
 .item-content {
@@ -1206,7 +1206,7 @@ tr:hover {
 }
 
 .item-index {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #546e7a;
   color: white;
   width: 28px;
   height: 28px;
@@ -1277,7 +1277,7 @@ tr:hover {
 }
 
 .btn-add-item {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #546e7a;
   color: white;
   border: none;
   padding: 0.75rem 1.5rem;
@@ -1290,7 +1290,7 @@ tr:hover {
 
 .btn-add-item:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 4px 12px rgba(84, 110, 122, 0.3);
 }
 
 .photo-preview-container {
@@ -1335,12 +1335,15 @@ tr:hover {
 
 .inspection-header-modern {
   padding: 1.25rem 1.5rem;
-  background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+  background: #546e7a;
   color: white;
   cursor: pointer;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
   user-select: none;
 }
 
@@ -1459,27 +1462,27 @@ tr:hover {
 }
 
 .btn-action.btn-primary {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #546e7a;
   color: white;
 }
 
 .btn-action.btn-success {
-  background: linear-gradient(135deg, #56ab2f 0%, #a8e063 100%);
+  background: #66bb6a;
   color: white;
 }
 
 .btn-action.btn-warning {
-  background: linear-gradient(135deg, #f2994a 0%, #f2c94c 100%);
+  background: #ffa726;
   color: white;
 }
 
 .btn-action.btn-danger {
-  background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%);
+  background: #ef5350;
   color: white;
 }
 
 .btn-action.btn-secondary {
-  background: linear-gradient(135deg, #bdc3c7 0%, #95a5a6 100%);
+  background: #90a4ae;
   color: white;
 }
 
@@ -1509,7 +1512,7 @@ tr:hover {
 
 .user-header-modern {
   padding: 1.25rem 1.5rem;
-  background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+  background: #546e7a;
   color: white;
   cursor: pointer;
   display: flex;
@@ -1639,13 +1642,13 @@ tr:hover {
 }
 
 .role-select-modern:hover {
-  border-color: #667eea;
+  border-color: #546e7a;
 }
 
 .role-select-modern:focus {
   outline: none;
-  border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  border-color: #546e7a;
+  box-shadow: 0 0 0 3px rgba(84, 110, 122, 0.1);
 }
 
 .action-buttons-section {
