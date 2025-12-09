@@ -40,12 +40,13 @@ public class UserController {
     @PostMapping
     public ResponseEntity<?> createUser(@RequestBody Map<String, String> userData) {
         String username = userData.get("username");
+        String name = userData.get("name");
         String password = userData.get("password");
         String email = userData.get("email");
         String roleStr = userData.get("role");
         
-        if (username == null || password == null || email == null) {
-            return ResponseEntity.badRequest().body(Map.of("error", "Username, password and email are required"));
+        if (username == null || name == null || password == null || email == null) {
+            return ResponseEntity.badRequest().body(Map.of("error", "Username, name, password and email are required"));
         }
         
         // Validate password length (minimum 6 characters for demo purposes)
@@ -72,7 +73,7 @@ public class UserController {
         
         // NOTE: This is a simplified demo implementation with plain text passwords.
         // In production, use BCrypt or another secure hashing algorithm.
-        User newUser = new User(username, password, email, role);
+        User newUser = new User(username, name, password, email, role);
         User savedUser = userRepository.save(newUser);
         
         return ResponseEntity.status(HttpStatus.CREATED).body(toUserResponse(savedUser));
@@ -156,6 +157,7 @@ public class UserController {
         Map<String, Object> response = new HashMap<>();
         response.put("id", user.getId());
         response.put("username", user.getUsername());
+        response.put("name", user.getName());
         response.put("email", user.getEmail());
         response.put("role", user.getRole().name());
         response.put("enabled", user.isEnabled());

@@ -9,6 +9,7 @@ const InspectionList: React.FC = () => {
   const [inspections, setInspections] = useState<Inspection[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<string>('all');
+  const [expandedInspectionId, setExpandedInspectionId] = useState<number | null>(null);
   const navigate = useNavigate();
   const { t } = useLanguage();
   const { canEdit } = useAuth();
@@ -81,6 +82,10 @@ const InspectionList: React.FC = () => {
     return i.status === filter;
   });
 
+  const toggleInspection = (id: number) => {
+    setExpandedInspectionId(expandedInspectionId === id ? null : id);
+  };
+
   if (loading) {
     return <div className="loading">{t('loadingInspections')}</div>;
   }
@@ -110,88 +115,105 @@ const InspectionList: React.FC = () => {
         </select>
       </div>
 
-      <div className="inspection-list">
-        {filteredInspections.length === 0 ? (
-          <div className="empty-state">
-            <h3>{t('noInspectionsFound')}</h3>
-            <p>{t('createNewInspection')}</p>
-          </div>
-        ) : (
-          <table>
-            <thead>
-              <tr>
-                <th>{t('facility')}</th>
-                <th>{t('date')}</th>
-                <th>{t('employee')}</th>
-                <th>{t('checklist')}</th>
-                <th>{t('status')}</th>
-                <th>{t('actions')}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredInspections.map((inspection) => (
-                <tr key={inspection.id}>
-                  <td>{inspection.facilityName}</td>
-                  <td>{new Date(inspection.inspectionDate).toLocaleDateString()}</td>
-                  <td>{inspection.responsibleEmployee}</td>
-                  <td>{inspection.checklist?.name || t('notAssigned')}</td>
-                  <td>
-                    <span className={`status-badge ${getStatusClass(inspection.status)}`}>
+      {filteredInspections.length === 0 ? (
+        <div className="empty-state">
+          <h3>{t('noInspectionsFound')}</h3>
+          <p>{t('createNewInspection')}</p>
+        </div>
+      ) : (
+        <div className="inspection-list-modern">
+          {filteredInspections.map((inspection) => {
+            const isExpanded = expandedInspectionId === inspection.id;
+            return (
+              <div key={inspection.id} className="inspection-card-modern">
+                <div className="inspection-header-modern" onClick={() => toggleInspection(inspection.id)}>
+                  <div className="inspection-title-section">
+                    <span className="expand-icon">{isExpanded ? '▼' : '▶'}</span>
+                    <div>
+                      <h3 className="inspection-title">{inspection.facilityName}</h3>
+                      <p className="inspection-subtitle">
+                        {t('employee')}: {inspection.responsibleEmployee}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="inspection-meta">
+                    <span className="date-badge">📅 {new Date(inspection.inspectionDate).toLocaleDateString()}</span>
+                    <span className={`status-badge-modern ${getStatusClass(inspection.status)}`}>
                       {getStatusLabel(inspection.status)}
                     </span>
-                  </td>
-                  <td>
-                    <div className="action-buttons">
+                  </div>
+                </div>
+
+                {isExpanded && (
+                  <div className="inspection-body-modern">
+                    <div className="inspection-details">
+                      <div className="detail-item">
+                        <span className="detail-label">{t('checklist')}:</span>
+                        <span className="detail-value">{inspection.checklist?.name || t('notAssigned')}</span>
+                      </div>
+                      <div className="detail-item">
+                        <span className="detail-label">{t('date')}:</span>
+                        <span className="detail-value">{new Date(inspection.inspectionDate).toLocaleDateString()}</span>
+                      </div>
+                      <div className="detail-item">
+                        <span className="detail-label">{t('status')}:</span>
+                        <span className={`status-badge ${getStatusClass(inspection.status)}`}>
+                          {getStatusLabel(inspection.status)}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="inspection-actions">
                       {canEdit && inspection.status === InspectionStatus.PLANNED && (
                         <button
-                          className="btn btn-success"
+                          className="btn-action btn-success"
                           onClick={() => {
                             handleStatusChange(inspection.id, InspectionStatus.IN_PROGRESS);
                             navigate(`/inspections/${inspection.id}/execute`);
                           }}
                         >
-                          {t('start')}
+                          ▶ {t('start')}
                         </button>
                       )}
                       {canEdit && inspection.status === InspectionStatus.IN_PROGRESS && (
                         <>
-                          <Link to={`/inspections/${inspection.id}/execute`} className="btn btn-warning">
-                            {t('continue')}
+                          <Link to={`/inspections/${inspection.id}/execute`} className="btn-action btn-warning">
+                            ⏵ {t('continue')}
                           </Link>
                           <button
-                            className="btn btn-success"
+                            className="btn-action btn-success"
                             onClick={() => handleStatusChange(inspection.id, InspectionStatus.COMPLETED)}
                           >
-                            {t('complete')}
+                            ✓ {t('complete')}
                           </button>
                         </>
                       )}
                       {inspection.status === InspectionStatus.COMPLETED && (
-                        <Link to={`/inspections/${inspection.id}/report`} className="btn btn-primary">
-                          {t('report')}
+                        <Link to={`/inspections/${inspection.id}/report`} className="btn-action btn-primary">
+                          📄 {t('report')}
                         </Link>
                       )}
                       {canEdit && (
-                        <Link to={`/inspections/${inspection.id}/edit`} className="btn btn-secondary">
-                          {t('edit')}
+                        <Link to={`/inspections/${inspection.id}/edit`} className="btn-action btn-secondary">
+                          ✏️ {t('edit')}
                         </Link>
                       )}
                       {canEdit && (
                         <button
-                          className="btn btn-danger"
+                          className="btn-action btn-danger"
                           onClick={() => handleDelete(inspection.id)}
                         >
-                          {t('delete')}
+                          🗑️ {t('delete')}
                         </button>
                       )}
                     </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
-      </div>
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 };

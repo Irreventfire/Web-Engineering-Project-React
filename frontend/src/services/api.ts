@@ -34,8 +34,8 @@ export const register = (username: string, password: string, email: string) =>
 // User management endpoints (admin only)
 export const getUsers = () => api.get<User[]>('/users');
 export const getUser = (id: number) => api.get<User>(`/users/${id}`);
-export const createUser = (username: string, password: string, email: string, role: UserRole) =>
-  api.post<User>('/users', { username, password, email, role });
+export const createUser = (username: string, name: string, password: string, email: string, role: UserRole) =>
+  api.post<User>('/users', { username, name, password, email, role });
 export const updateUserRole = (id: number, role: UserRole) => 
   api.put<User>(`/users/${id}/role`, { role });
 export const updateUserEnabled = (id: number, enabled: boolean) => 

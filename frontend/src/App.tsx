@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, NavLink, Navigate } from 'react-router-dom';
 import './App.css';
 
@@ -19,6 +19,7 @@ import { UserRole } from './types';
 const AppContent: React.FC = () => {
   const { isAuthenticated, isAdmin, user, logout } = useAuth();
   const { t, language, setLanguage } = useLanguage();
+  const [showSettingsDropdown, setShowSettingsDropdown] = useState(false);
 
   if (!isAuthenticated) {
     return (
@@ -64,16 +65,36 @@ const AppContent: React.FC = () => {
           )}
         </div>
         <div className="user-info">
-          <div className="language-switcher">
-            <select value={language} onChange={(e) => setLanguage(e.target.value as 'en' | 'de')} aria-label="Select language">
-              <option value="de">{t('german')}</option>
-              <option value="en">{t('english')}</option>
-            </select>
+          <span className="user-name">{user?.name} ({user?.role})</span>
+          <div className="settings-dropdown">
+            <button 
+              className="btn btn-primary settings-btn" 
+              onClick={() => setShowSettingsDropdown(!showSettingsDropdown)}
+              aria-label="Settings menu"
+            >
+              {t('settings')}
+            </button>
+            {showSettingsDropdown && (
+              <div className="dropdown-menu">
+                <div className="dropdown-item">
+                  <label htmlFor="language-select">{t('language')}:</label>
+                  <select 
+                    id="language-select"
+                    value={language} 
+                    onChange={(e) => setLanguage(e.target.value as 'en' | 'de')} 
+                    aria-label="Select language"
+                  >
+                    <option value="de">{t('german')}</option>
+                    <option value="en">{t('english')}</option>
+                  </select>
+                </div>
+                <div className="dropdown-divider"></div>
+                <button className="dropdown-item-button" onClick={() => { logout(); setShowSettingsDropdown(false); }}>
+                  {t('logout')}
+                </button>
+              </div>
+            )}
           </div>
-          <span className="user-name">{user?.username} ({user?.role})</span>
-          <button className="btn btn-secondary btn-logout" onClick={logout}>
-            {t('logout')}
-          </button>
         </div>
       </nav>
 

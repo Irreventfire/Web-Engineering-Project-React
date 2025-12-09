@@ -18,19 +18,19 @@ const TestComponent: React.FC = () => {
       <span data-testid="hasUserRole">{hasRole(UserRole.USER) ? 'true' : 'false'}</span>
       <button 
         data-testid="loginAdmin"
-        onClick={() => login({ id: 1, username: 'admin', email: 'admin@test.com', role: UserRole.ADMIN, enabled: true })}
+        onClick={() => login({ id: 1, username: 'admin', name: 'Admin User', email: 'admin@test.com', role: UserRole.ADMIN, enabled: true })}
       >
         Login Admin
       </button>
       <button 
         data-testid="loginUser"
-        onClick={() => login({ id: 2, username: 'user', email: 'user@test.com', role: UserRole.USER, enabled: true })}
+        onClick={() => login({ id: 2, username: 'user', name: 'Regular User', email: 'user@test.com', role: UserRole.USER, enabled: true })}
       >
         Login User
       </button>
       <button 
         data-testid="loginViewer"
-        onClick={() => login({ id: 3, username: 'viewer', email: 'viewer@test.com', role: UserRole.VIEWER, enabled: true })}
+        onClick={() => login({ id: 3, username: 'viewer', name: 'Viewer User', email: 'viewer@test.com', role: UserRole.VIEWER, enabled: true })}
       >
         Login Viewer
       </button>

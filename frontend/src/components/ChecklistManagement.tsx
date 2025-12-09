@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { getChecklists, createChecklist, deleteChecklist, addChecklistItem, deleteChecklistItem, uploadFile, updateChecklistItem } from '../services/api';
+import { getChecklists, createChecklist, deleteChecklist, addChecklistItem, deleteChecklistItem, uploadFile, updateChecklistItem, updateChecklist } from '../services/api';
 import { Checklist, ChecklistItem } from '../types';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useAuth } from '../contexts/AuthContext';
@@ -15,6 +15,9 @@ const ChecklistManagement: React.FC = () => {
   const [newChecklist, setNewChecklist] = useState({ name: '', description: '' });
   const [newItem, setNewItem] = useState({ description: '', orderIndex: 0, desiredPhotoUrl: '' });
   const [uploading, setUploading] = useState(false);
+  const [editingChecklist, setEditingChecklist] = useState<Checklist | null>(null);
+  const [editingItem, setEditingItem] = useState<ChecklistItem | null>(null);
+  const [expandedChecklistId, setExpandedChecklistId] = useState<number | null>(null);
   const { t } = useLanguage();
   const { canEdit } = useAuth();
 
@@ -33,18 +36,6 @@ const ChecklistManagement: React.FC = () => {
     }
   };
 
-  const handleCreateChecklist = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      const response = await createChecklist(newChecklist);
-      setChecklists([...checklists, response.data]);
-      setNewChecklist({ name: '', description: '' });
-      setShowModal(false);
-    } catch (error) {
-      console.error('Error creating checklist:', error);
-    }
-  };
-
   const handleDeleteChecklist = async (id: number) => {
     if (window.confirm(t('deleteChecklistConfirm'))) {
       try {
@@ -53,31 +44,6 @@ const ChecklistManagement: React.FC = () => {
       } catch (error) {
         console.error('Error deleting checklist:', error);
       }
-    }
-  };
-
-  const handleAddItem = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!selectedChecklist) return;
-
-    try {
-      const response = await addChecklistItem(selectedChecklist.id, {
-        ...newItem,
-        orderIndex: selectedChecklist.items.length + 1
-      });
-      
-      // Update the checklist with the new item
-      setChecklists(checklists.map(c => 
-        c.id === selectedChecklist.id 
-          ? { ...c, items: [...c.items, response.data] }
-          : c
-      ));
-      
-      setNewItem({ description: '', orderIndex: 0, desiredPhotoUrl: '' });
-      setShowItemModal(false);
-      setSelectedChecklist(null);
-    } catch (error) {
-      console.error('Error adding item:', error);
     }
   };
 
@@ -96,8 +62,88 @@ const ChecklistManagement: React.FC = () => {
 
   const openAddItemModal = (checklist: Checklist) => {
     setSelectedChecklist(checklist);
+    setEditingItem(null);
     setNewItem({ description: '', orderIndex: 0, desiredPhotoUrl: '' });
     setShowItemModal(true);
+  };
+
+  const openEditChecklistModal = (checklist: Checklist) => {
+    setEditingChecklist(checklist);
+    setNewChecklist({ name: checklist.name, description: checklist.description });
+    setShowModal(true);
+  };
+
+  const openEditItemModal = (checklist: Checklist, item: ChecklistItem) => {
+    setSelectedChecklist(checklist);
+    setEditingItem(item);
+    setNewItem({ 
+      description: item.description, 
+      orderIndex: item.orderIndex,
+      desiredPhotoUrl: item.desiredPhotoUrl || ''
+    });
+    setShowItemModal(true);
+  };
+
+  const handleSaveChecklist = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      if (editingChecklist) {
+        // Update existing checklist
+        const response = await updateChecklist(editingChecklist.id, newChecklist);
+        setChecklists(checklists.map(c => c.id === editingChecklist.id ? response.data : c));
+        setEditingChecklist(null);
+      } else {
+        // Create new checklist
+        const response = await createChecklist(newChecklist);
+        setChecklists([...checklists, response.data]);
+      }
+      setNewChecklist({ name: '', description: '' });
+      setShowModal(false);
+    } catch (error) {
+      console.error('Error saving checklist:', error);
+    }
+  };
+
+  const handleSaveItem = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!selectedChecklist) return;
+
+    try {
+      if (editingItem) {
+        // Update existing item
+        const response = await updateChecklistItem(editingItem.id, {
+          description: newItem.description,
+          desiredPhotoUrl: newItem.desiredPhotoUrl
+        });
+        setChecklists(checklists.map(c => 
+          c.id === selectedChecklist.id 
+            ? { ...c, items: c.items.map(i => i.id === editingItem.id ? response.data : i) }
+            : c
+        ));
+        setEditingItem(null);
+      } else {
+        // Add new item
+        const response = await addChecklistItem(selectedChecklist.id, {
+          ...newItem,
+          orderIndex: selectedChecklist.items.length + 1
+        });
+        setChecklists(checklists.map(c => 
+          c.id === selectedChecklist.id 
+            ? { ...c, items: [...c.items, response.data] }
+            : c
+        ));
+      }
+      
+      setNewItem({ description: '', orderIndex: 0, desiredPhotoUrl: '' });
+      setShowItemModal(false);
+      setSelectedChecklist(null);
+    } catch (error) {
+      console.error('Error saving item:', error);
+    }
+  };
+
+  const toggleChecklist = (id: number) => {
+    setExpandedChecklistId(expandedChecklistId === id ? null : id);
   };
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>, isNewItem: boolean, item?: ChecklistItem, checklistId?: number) => {
@@ -146,91 +192,115 @@ const ChecklistManagement: React.FC = () => {
           <p>{t('defineInspectionCriteria')}</p>
         </div>
       ) : (
-        <div className="checklist-grid">
-          {checklists.map(checklist => (
-            <div key={checklist.id} className="checklist-card">
-              <div className="checklist-card-header">
-                <h4>{checklist.name}</h4>
-                <p>{checklist.description}</p>
-              </div>
-              <div className="checklist-items">
-                {checklist.items.length === 0 ? (
-                  <p className="no-items-text">{t('noItemsYet')}</p>
-                ) : (
-                  checklist.items.map((item, itemIndex) => (
-                    <div key={item.id} className="checklist-item checklist-item-column">
-                      <div className="checklist-item-row">
-                        <span className="item-number">{itemIndex + 1}</span>
-                        <span className="checklist-item-text">{item.description}</span>
-                        {canEdit && (
-                          <button 
-                            className="btn btn-danger btn-small button-margin-left" 
-                            onClick={() => handleDeleteItem(checklist.id, item.id)}
-                          >
-                            ✕
-                          </button>
-                        )}
-                      </div>
-                      {item.desiredPhotoUrl && (
-                        <div className="checklist-item-photo-container">
-                          <img 
-                            src={`${API_BASE_URL}${item.desiredPhotoUrl.replace('/api', '')}`}
-                            alt={t('desiredState')} 
-                            className="desired-state-image"
-                          />
-                          <span className="checklist-item-desired-state">{t('desiredState')}</span>
-                        </div>
-                      )}
-                      {canEdit && !item.desiredPhotoUrl && (
-                        <div className="photo-upload checklist-item-photo-container">
-                          <input
-                            type="file"
-                            id={`item-photo-${item.id}`}
-                            accept="image/*"
-                            onChange={(e) => handleFileUpload(e, false, item, checklist.id)}
-                            disabled={uploading}
-                          />
-                          <label htmlFor={`item-photo-${item.id}`} className="photo-upload-label">
-                            📷 {t('uploadDesiredPhoto')}
-                          </label>
-                        </div>
-                      )}
+        <div className="checklist-list">
+          {checklists.map(checklist => {
+            const isExpanded = expandedChecklistId === checklist.id;
+            return (
+              <div key={checklist.id} className="checklist-card-modern">
+                <div className="checklist-header-modern" onClick={() => toggleChecklist(checklist.id)}>
+                  <div className="checklist-title-section">
+                    <span className="expand-icon">{isExpanded ? '▼' : '▶'}</span>
+                    <div>
+                      <h3 className="checklist-title">{checklist.name}</h3>
+                      <p className="checklist-description">{checklist.description}</p>
                     </div>
-                  ))
-                )}
-              </div>
-              {canEdit && (
-                <div className="checklist-item-footer">
-                  <div className="action-buttons">
-                    <button 
-                      className="btn btn-primary" 
-                      onClick={() => openAddItemModal(checklist)}
-                    >
-                      {t('addItem')}
-                    </button>
-                    <button 
-                      className="btn btn-danger" 
-                      onClick={() => handleDeleteChecklist(checklist.id)}
-                    >
-                      {t('delete')}
-                    </button>
+                  </div>
+                  <div className="checklist-meta">
+                    <span className="item-count-badge">{checklist.items.length} {t('items')}</span>
+                    {canEdit && (
+                      <div className="checklist-actions" onClick={(e) => e.stopPropagation()}>
+                        <button 
+                          className="btn-icon btn-edit" 
+                          onClick={() => openEditChecklistModal(checklist)}
+                          title={t('edit')}
+                        >
+                          ✏️
+                        </button>
+                        <button 
+                          className="btn-icon btn-delete" 
+                          onClick={() => handleDeleteChecklist(checklist.id)}
+                          title={t('delete')}
+                        >
+                          🗑️
+                        </button>
+                      </div>
+                    )}
                   </div>
                 </div>
-              )}
-            </div>
-          ))}
+                
+                {isExpanded && (
+                  <div className="checklist-body-modern">
+                    {checklist.items.length === 0 ? (
+                      <div className="empty-items">
+                        <p>{t('noItemsYet')}</p>
+                      </div>
+                    ) : (
+                      <ul className="items-list-modern">
+                        {checklist.items.map((item, itemIndex) => (
+                          <li key={item.id} className="item-row-modern">
+                            <div className="item-content">
+                              <span className="item-index">{itemIndex + 1}.</span>
+                              <span className="item-description">{item.description}</span>
+                              {item.desiredPhotoUrl && (
+                                <div className="item-photo-preview">
+                                  <img 
+                                    src={`${API_BASE_URL}${item.desiredPhotoUrl.replace('/api', '')}`}
+                                    alt={t('desiredState')} 
+                                    className="thumbnail-image"
+                                  />
+                                  <span className="photo-label">📷</span>
+                                </div>
+                              )}
+                            </div>
+                            {canEdit && (
+                              <div className="item-actions">
+                                <button 
+                                  className="btn-icon-small btn-edit-small" 
+                                  onClick={() => openEditItemModal(checklist, item)}
+                                  title={t('edit')}
+                                >
+                                  ✏️
+                                </button>
+                                <button 
+                                  className="btn-icon-small btn-delete-small" 
+                                  onClick={() => handleDeleteItem(checklist.id, item.id)}
+                                  title={t('delete')}
+                                >
+                                  ✕
+                                </button>
+                              </div>
+                            )}
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                    {canEdit && (
+                      <div className="add-item-section">
+                        <button 
+                          className="btn-add-item" 
+                          onClick={() => openAddItemModal(checklist)}
+                        >
+                          + {t('addItem')}
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </div>
       )}
 
-      {/* Create Checklist Modal */}
+      {/* Create/Edit Checklist Modal */}
       {showModal && (
-        <div className="modal-overlay" onClick={() => setShowModal(false)}>
+        <div className="modal-overlay" onClick={() => { setShowModal(false); setEditingChecklist(null); }}>
           <div className="modal-content" onClick={e => e.stopPropagation()}>
             <div className="modal-header">
-              <h3>{t('newChecklist')}</h3>
-              <button className="modal-close" onClick={() => setShowModal(false)}>×</button>
+              <h3>{editingChecklist ? t('editChecklist') : t('newChecklist')}</h3>
+              <button className="modal-close" onClick={() => { setShowModal(false); setEditingChecklist(null); }}>×</button>
             </div>
-            <form onSubmit={handleCreateChecklist}>
+            <form onSubmit={handleSaveChecklist}>
               <div className="form-group">
                 <label htmlFor="name">{t('name')} *</label>
                 <input
@@ -253,11 +323,11 @@ const ChecklistManagement: React.FC = () => {
                 />
               </div>
               <div className="form-actions">
-                <button type="button" className="btn btn-secondary" onClick={() => setShowModal(false)}>
+                <button type="button" className="btn btn-secondary" onClick={() => { setShowModal(false); setEditingChecklist(null); }}>
                   {t('cancel')}
                 </button>
                 <button type="submit" className="btn btn-primary">
-                  {t('create')}
+                  {editingChecklist ? t('save') : t('create')}
                 </button>
               </div>
             </form>
@@ -265,15 +335,15 @@ const ChecklistManagement: React.FC = () => {
         </div>
       )}
 
-      {/* Add Item Modal */}
+      {/* Add/Edit Item Modal */}
       {showItemModal && (
-        <div className="modal-overlay" onClick={() => setShowItemModal(false)}>
+        <div className="modal-overlay" onClick={() => { setShowItemModal(false); setEditingItem(null); }}>
           <div className="modal-content" onClick={e => e.stopPropagation()}>
             <div className="modal-header">
-              <h3>{t('addChecklistItem')}</h3>
-              <button className="modal-close" onClick={() => setShowItemModal(false)}>×</button>
+              <h3>{editingItem ? t('editChecklistItem') : t('addChecklistItem')}</h3>
+              <button className="modal-close" onClick={() => { setShowItemModal(false); setEditingItem(null); }}>×</button>
             </div>
-            <form onSubmit={handleAddItem}>
+            <form onSubmit={handleSaveItem}>
               <div className="form-group">
                 <label htmlFor="itemDescription">{t('description')} *</label>
                 <input
@@ -300,21 +370,28 @@ const ChecklistManagement: React.FC = () => {
                   </label>
                 </div>
                 {newItem.desiredPhotoUrl && (
-                  <div className="photo-upload">
+                  <div className="photo-preview-container">
                     <img 
                       src={`${API_BASE_URL}${newItem.desiredPhotoUrl.replace('/api', '')}`}
                       alt={t('desiredState')} 
                       className="preview-image-large"
                     />
+                    <button 
+                      type="button"
+                      className="btn-remove-photo"
+                      onClick={() => setNewItem({ ...newItem, desiredPhotoUrl: '' })}
+                    >
+                      ✕ {t('removePhoto')}
+                    </button>
                   </div>
                 )}
               </div>
               <div className="form-actions">
-                <button type="button" className="btn btn-secondary" onClick={() => setShowItemModal(false)}>
+                <button type="button" className="btn btn-secondary" onClick={() => { setShowItemModal(false); setEditingItem(null); }}>
                   {t('cancel')}
                 </button>
                 <button type="submit" className="btn btn-primary" disabled={uploading}>
-                  {t('add')}
+                  {editingItem ? t('save') : t('add')}
                 </button>
               </div>
             </form>

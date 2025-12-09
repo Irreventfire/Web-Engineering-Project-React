@@ -11,10 +11,12 @@ const AdminDashboard: React.FC = () => {
   const [error, setError] = useState('');
   const [showAddModal, setShowAddModal] = useState(false);
   const [newUsername, setNewUsername] = useState('');
+  const [newName, setNewName] = useState('');
   const [newEmail, setNewEmail] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [newRole, setNewRole] = useState<UserRole>(UserRole.USER);
   const [addingUser, setAddingUser] = useState(false);
+  const [expandedUserId, setExpandedUserId] = useState<number | null>(null);
   const { user: currentUser, isAdmin } = useAuth();
   const { t } = useLanguage();
   const navigate = useNavigate();
@@ -45,10 +47,11 @@ const AdminDashboard: React.FC = () => {
     setAddingUser(true);
 
     try {
-      const response = await createUser(newUsername, newPassword, newEmail, newRole);
+      const response = await createUser(newUsername, newName, newPassword, newEmail, newRole);
       setUsers([...users, response.data]);
       setShowAddModal(false);
       setNewUsername('');
+      setNewName('');
       setNewEmail('');
       setNewPassword('');
       setNewRole(UserRole.USER);
@@ -148,10 +151,15 @@ const AdminDashboard: React.FC = () => {
   const openAddModal = () => {
     setError('');
     setNewUsername('');
+    setNewName('');
     setNewEmail('');
     setNewPassword('');
     setNewRole(UserRole.USER);
     setShowAddModal(true);
+  };
+
+  const toggleUser = (id: number) => {
+    setExpandedUserId(expandedUserId === id ? null : id);
   };
 
   if (!isAdmin) {
@@ -191,6 +199,17 @@ const AdminDashboard: React.FC = () => {
                   onChange={(e) => setNewUsername(e.target.value)}
                   required
                   placeholder={t('enterUsername')}
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="new-name">{t('name')}</label>
+                <input
+                  type="text"
+                  id="new-name"
+                  value={newName}
+                  onChange={(e) => setNewName(e.target.value)}
+                  required
+                  placeholder={t('enterName')}
                 />
               </div>
               <div className="form-group">
@@ -240,75 +259,102 @@ const AdminDashboard: React.FC = () => {
         </div>
       )}
       
-      <div className="user-list">
-        <table>
-          <thead>
-            <tr>
-              <th>{t('id')}</th>
-              <th>{t('username')}</th>
-              <th>{t('email')}</th>
-              <th>{t('role')}</th>
-              <th>{t('status')}</th>
-              <th>{t('actions')}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {users.map((user) => (
-              <tr key={user.id} className={!user.enabled ? 'disabled-row' : ''}>
-                <td>{user.id}</td>
-                <td>
-                  {user.username}
-                  {currentUser && user.id === currentUser.id && (
-                    <span className="you-badge">{t('you')}</span>
-                  )}
-                </td>
-                <td>{user.email}</td>
-                <td>
-                  <span className={`role-badge ${getRoleBadgeClass(user.role)}`}>
+      <div className="user-list-modern">
+        {users.map((user) => {
+          const isExpanded = expandedUserId === user.id;
+          const isSelf = currentUser && user.id === currentUser.id;
+          return (
+            <div key={user.id} className={`user-card-modern ${!user.enabled ? 'disabled-card' : ''}`}>
+              <div className="user-header-modern" onClick={() => toggleUser(user.id)}>
+                <div className="user-title-section">
+                  <span className="expand-icon">{isExpanded ? '▼' : '▶'}</span>
+                  <div>
+                    <h3 className="user-title">
+                      {user.username}
+                      {isSelf && <span className="you-badge-modern">{t('you')}</span>}
+                    </h3>
+                    <p className="user-subtitle">{user.name}</p>
+                  </div>
+                </div>
+                <div className="user-meta">
+                  <span className={`role-badge-modern ${getRoleBadgeClass(user.role)}`}>
                     {user.role}
                   </span>
-                </td>
-                <td>
-                  <span className={`status-badge ${user.enabled ? 'enabled' : 'disabled'}`}>
+                  <span className={`status-badge-modern ${user.enabled ? 'enabled' : 'disabled'}`}>
                     {user.enabled ? t('active') : t('disabled')}
                   </span>
-                </td>
-                <td>
-                  <div className="action-buttons">
-                    {currentUser && user.id !== currentUser.id ? (
-                      <>
+                </div>
+              </div>
+
+              {isExpanded && (
+                <div className="user-body-modern">
+                  <div className="user-details">
+                    <div className="detail-item">
+                      <span className="detail-label">{t('id')}:</span>
+                      <span className="detail-value">{user.id}</span>
+                    </div>
+                    <div className="detail-item">
+                      <span className="detail-label">{t('email')}:</span>
+                      <span className="detail-value">{user.email}</span>
+                    </div>
+                    <div className="detail-item">
+                      <span className="detail-label">{t('role')}:</span>
+                      <span className="detail-value">
+                        <span className={`role-badge ${getRoleBadgeClass(user.role)}`}>
+                          {user.role}
+                        </span>
+                      </span>
+                    </div>
+                    <div className="detail-item">
+                      <span className="detail-label">{t('status')}:</span>
+                      <span className="detail-value">
+                        <span className={`status-badge ${user.enabled ? 'enabled' : 'disabled'}`}>
+                          {user.enabled ? t('active') : t('disabled')}
+                        </span>
+                      </span>
+                    </div>
+                  </div>
+
+                  {!isSelf ? (
+                    <div className="user-actions">
+                      <div className="role-change-section">
+                        <label htmlFor={`role-${user.id}`}>{t('changeRole')}:</label>
                         <select
+                          id={`role-${user.id}`}
                           value={user.role}
                           onChange={(e) => handleRoleChange(user.id, e.target.value as UserRole)}
-                          className="role-select"
-                          aria-label={`Change role for ${user.username}`}
+                          className="role-select-modern"
                         >
                           <option value={UserRole.ADMIN}>Admin</option>
                           <option value={UserRole.USER}>User</option>
                           <option value={UserRole.VIEWER}>Viewer</option>
                         </select>
+                      </div>
+                      <div className="action-buttons-section">
                         <button
-                          className={`btn ${user.enabled ? 'btn-warning' : 'btn-success'}`}
+                          className={`btn-action ${user.enabled ? 'btn-warning' : 'btn-success'}`}
                           onClick={() => handleToggleEnabled(user.id, !user.enabled)}
                         >
-                          {user.enabled ? t('disable') : t('enable')}
+                          {user.enabled ? '⏸ ' + t('disable') : '▶ ' + t('enable')}
                         </button>
                         <button
-                          className="btn btn-danger"
+                          className="btn-action btn-danger"
                           onClick={() => handleDeleteUser(user.id)}
                         >
-                          {t('delete')}
+                          🗑️ {t('delete')}
                         </button>
-                      </>
-                    ) : (
-                      <span className="no-actions">{t('cannotModifySelf')}</span>
-                    )}
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="no-actions-message">
+                      {t('cannotModifySelf')}
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          );
+        })}
       </div>
     </div>
   );

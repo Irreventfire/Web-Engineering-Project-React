@@ -90,14 +90,6 @@
 .stat-card.completed .value { color: #27ae60; }
 .stat-card.total .value { color: #9b59b6; }
 
-/* Inspection List Styles */
-.inspection-list {
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-  overflow: hidden;
-}
-
 .section-header {
   display: flex;
   justify-content: space-between;
@@ -165,7 +157,10 @@ tr:hover {
   border-radius: 4px;
   cursor: pointer;
   font-weight: 500;
+  font-size: 0.95rem;
   transition: background-color 0.3s, transform 0.1s;
+  text-decoration: none;
+  display: inline-block;
 }
 
 .btn:hover {
@@ -272,68 +267,6 @@ tr:hover {
 .checklist-container {
   max-width: 1200px;
   margin: 0 auto;
-}
-
-.checklist-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 1.5rem;
-}
-
-.checklist-card {
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-  overflow: hidden;
-}
-
-.checklist-card-header {
-  padding: 1rem;
-  background-color: #f8f9fa;
-  border-bottom: 1px solid #e9ecef;
-}
-
-.checklist-card-header h4 {
-  margin: 0 0 0.25rem 0;
-  color: #2c3e50;
-}
-
-.checklist-card-header p {
-  margin: 0;
-  color: #7f8c8d;
-  font-size: 0.9rem;
-}
-
-.checklist-items {
-  padding: 1rem;
-}
-
-.checklist-item {
-  display: flex;
-  align-items: center;
-  padding: 0.5rem 0;
-  border-bottom: 1px solid #f0f0f0;
-}
-
-.checklist-item:last-child {
-  border-bottom: none;
-}
-
-.checklist-item span {
-  flex: 1;
-}
-
-.item-number {
-  width: 24px;
-  height: 24px;
-  background-color: #3498db;
-  color: white;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.75rem;
-  margin-right: 0.75rem;
 }
 
 /* Inspection Execution Styles */
@@ -720,16 +653,7 @@ tr:hover {
   margin-bottom: 1.5rem;
 }
 
-.user-list {
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-  overflow-x: auto;
-}
 
-.user-list table {
-  min-width: 800px;
-}
 
 /* Role Badge */
 .role-badge {
@@ -766,34 +690,6 @@ tr:hover {
   color: #c0392b;
 }
 
-/* Disabled row */
-.disabled-row {
-  opacity: 0.6;
-  background-color: #f8f9fa;
-}
-
-/* You badge */
-.you-badge {
-  margin-left: 0.5rem;
-  font-size: 0.75rem;
-  color: #7f8c8d;
-  font-style: italic;
-}
-
-/* Role select */
-.role-select {
-  padding: 0.35rem 0.5rem;
-  border: 1px solid #dce4ec;
-  border-radius: 4px;
-  font-size: 0.85rem;
-  cursor: pointer;
-}
-
-.no-actions {
-  color: #7f8c8d;
-  font-style: italic;
-  font-size: 0.85rem;
-}
 
 /* Responsive adjustments for login and admin */
 @media (max-width: 768px) {
@@ -899,6 +795,85 @@ tr:hover {
 .language-switcher select:focus {
   outline: none;
   border-color: #3498db;
+}
+
+/* Settings Dropdown Styles */
+.settings-dropdown {
+  position: relative;
+}
+
+.settings-btn {
+  padding: 0.4rem 0.75rem;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 0.5rem;
+  background: white;
+  border-radius: 4px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  min-width: 200px;
+  z-index: 1000;
+  padding: 0.5rem 0;
+}
+
+.dropdown-item {
+  padding: 0.75rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.dropdown-item label {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #2c3e50;
+}
+
+.dropdown-item select {
+  padding: 0.4rem 0.5rem;
+  border: 1px solid #dce4ec;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  background-color: white;
+  color: #2c3e50;
+}
+
+.dropdown-item select:focus {
+  outline: none;
+  border-color: #3498db;
+}
+
+.dropdown-divider {
+  height: 1px;
+  background-color: #e9ecef;
+  margin: 0.5rem 0;
+}
+
+.dropdown-item-button {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: none;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+  font-size: 0.85rem;
+  color: #2c3e50;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: background-color 0.2s;
+}
+
+.dropdown-item-button:hover {
+  background-color: #f8f9fa;
 }
 
 /* Responsive Footer */
@@ -1086,3 +1061,605 @@ tr:hover {
   color: #388e3c;
   display: block;
 }
+
+/* Modern Checklist Styles */
+.checklist-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.checklist-card-modern {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  overflow: hidden;
+  transition: box-shadow 0.3s ease;
+}
+
+.checklist-card-modern:hover {
+  box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+}
+
+.checklist-header-modern {
+  padding: 1.25rem 1.5rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.checklist-title-section {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex: 1;
+}
+
+.expand-icon {
+  font-size: 0.9rem;
+  transition: transform 0.3s ease;
+  min-width: 20px;
+}
+
+.checklist-title {
+  margin: 0 0 0.25rem 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.checklist-description {
+  margin: 0;
+  font-size: 0.9rem;
+  opacity: 0.9;
+}
+
+.checklist-meta {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.item-count-badge {
+  background: rgba(255, 255, 255, 0.25);
+  padding: 0.35rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.checklist-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.btn-icon {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background 0.2s ease;
+}
+
+.btn-icon:hover {
+  background: rgba(255, 255, 255, 0.35);
+}
+
+.checklist-body-modern {
+  padding: 1rem 1.5rem 1.5rem;
+  background: #fafafa;
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    max-height: 0;
+  }
+  to {
+    opacity: 1;
+    max-height: 1000px;
+  }
+}
+
+.empty-items {
+  text-align: center;
+  padding: 2rem;
+  color: #999;
+  font-style: italic;
+}
+
+.items-list-modern {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1rem 0;
+}
+
+.item-row-modern {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background: white;
+  border-radius: 8px;
+  margin-bottom: 0.75rem;
+  border: 1px solid #e0e0e0;
+  transition: all 0.2s ease;
+}
+
+.item-row-modern:hover {
+  border-color: #667eea;
+  box-shadow: 0 2px 6px rgba(102, 126, 234, 0.15);
+}
+
+.item-content {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex: 1;
+}
+
+.item-index {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.item-description {
+  color: #333;
+  font-size: 0.95rem;
+  flex: 1;
+}
+
+.item-photo-preview {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-left: auto;
+  margin-right: 1rem;
+}
+
+.thumbnail-image {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 2px solid #e0e0e0;
+}
+
+.photo-label {
+  font-size: 1.2rem;
+}
+
+.item-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.btn-icon-small {
+  background: none;
+  border: none;
+  padding: 0.4rem 0.6rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background 0.2s ease;
+}
+
+.btn-edit-small:hover {
+  background: #fff3cd;
+}
+
+.btn-delete-small:hover {
+  background: #f8d7da;
+}
+
+.add-item-section {
+  text-align: center;
+  padding-top: 0.5rem;
+  border-top: 2px dashed #e0e0e0;
+  margin-top: 0.5rem;
+}
+
+.btn-add-item {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn-add-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.photo-preview-container {
+  position: relative;
+  margin-top: 1rem;
+}
+
+.btn-remove-photo {
+  background: #dc3545;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  margin-top: 0.5rem;
+  transition: background 0.2s ease;
+}
+
+.btn-remove-photo:hover {
+  background: #c82333;
+}
+
+/* Modern Inspection List Styles */
+.inspection-list-modern {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.inspection-card-modern {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  overflow: hidden;
+  transition: box-shadow 0.3s ease;
+}
+
+.inspection-card-modern:hover {
+  box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+}
+
+.inspection-header-modern {
+  padding: 1.25rem 1.5rem;
+  background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+  color: white;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  user-select: none;
+}
+
+.inspection-title-section {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex: 1;
+}
+
+.inspection-title {
+  margin: 0 0 0.25rem 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.inspection-subtitle {
+  margin: 0;
+  font-size: 0.9rem;
+  opacity: 0.9;
+}
+
+.inspection-meta {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.date-badge {
+  background: rgba(255, 255, 255, 0.25);
+  padding: 0.35rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.status-badge-modern {
+  padding: 0.35rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.status-badge-modern.planned {
+  background: #e3f2fd;
+  color: #1976d2;
+}
+
+.status-badge-modern.in-progress {
+  background: #fff3e0;
+  color: #f57c00;
+}
+
+.status-badge-modern.completed {
+  background: #e8f5e9;
+  color: #388e3c;
+}
+
+.inspection-body-modern {
+  padding: 1.5rem;
+  background: #fafafa;
+  animation: slideDown 0.3s ease;
+}
+
+.inspection-details {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background: white;
+  border-radius: 8px;
+}
+
+.detail-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.detail-label {
+  font-size: 0.85rem;
+  color: #666;
+  font-weight: 500;
+}
+
+.detail-value {
+  font-size: 0.95rem;
+  color: #333;
+}
+
+.inspection-actions {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  padding-top: 1rem;
+  border-top: 2px dashed #e0e0e0;
+}
+
+.btn-action {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.btn-action:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.btn-action.btn-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.btn-action.btn-success {
+  background: linear-gradient(135deg, #56ab2f 0%, #a8e063 100%);
+  color: white;
+}
+
+.btn-action.btn-warning {
+  background: linear-gradient(135deg, #f2994a 0%, #f2c94c 100%);
+  color: white;
+}
+
+.btn-action.btn-danger {
+  background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%);
+  color: white;
+}
+
+.btn-action.btn-secondary {
+  background: linear-gradient(135deg, #bdc3c7 0%, #95a5a6 100%);
+  color: white;
+}
+
+/* Modern Admin Dashboard Styles */
+.user-list-modern {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.user-card-modern {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  overflow: hidden;
+  transition: box-shadow 0.3s ease;
+}
+
+.user-card-modern:hover {
+  box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+}
+
+.user-card-modern.disabled-card {
+  opacity: 0.7;
+  background: #f5f5f5;
+}
+
+.user-header-modern {
+  padding: 1.25rem 1.5rem;
+  background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+  color: white;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.user-title-section {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex: 1;
+}
+
+.user-title {
+  margin: 0 0 0.25rem 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.user-subtitle {
+  margin: 0;
+  font-size: 0.9rem;
+  opacity: 0.9;
+}
+
+.you-badge-modern {
+  background: rgba(255, 255, 255, 0.3);
+  padding: 0.25rem 0.5rem;
+  border-radius: 12px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.user-meta {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.role-badge-modern {
+  padding: 0.35rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.role-badge-modern.admin {
+  background: #ffd700;
+  color: #8b4513;
+}
+
+.role-badge-modern.user {
+  background: #e3f2fd;
+  color: #1976d2;
+}
+
+.role-badge-modern.viewer {
+  background: #f3e5f5;
+  color: #7b1fa2;
+}
+
+.status-badge-modern.enabled {
+  background: #e8f5e9;
+  color: #388e3c;
+}
+
+.status-badge-modern.disabled {
+  background: #ffebee;
+  color: #c62828;
+}
+
+.user-body-modern {
+  padding: 1.5rem;
+  background: #fafafa;
+  animation: slideDown 0.3s ease;
+}
+
+.user-details {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background: white;
+  border-radius: 8px;
+}
+
+.user-actions {
+  padding-top: 1rem;
+  border-top: 2px dashed #e0e0e0;
+}
+
+.role-change-section {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  background: white;
+  border-radius: 8px;
+}
+
+.role-change-section label {
+  font-weight: 500;
+  color: #333;
+}
+
+.role-select-modern {
+  flex: 1;
+  padding: 0.5rem 1rem;
+  border: 2px solid #e0e0e0;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  background: white;
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+}
+
+.role-select-modern:hover {
+  border-color: #667eea;
+}
+
+.role-select-modern:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.action-buttons-section {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.no-actions-message {
+  text-align: center;
+  padding: 2rem;
+  color: #999;
+  font-style: italic;
+  background: white;
+  border-radius: 8px;
+}
+
