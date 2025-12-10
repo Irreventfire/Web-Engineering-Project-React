@@ -5,6 +5,7 @@ import com.inspection.model.UserRole;
 import com.inspection.repository.UserRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -18,9 +19,11 @@ import java.util.stream.Collectors;
 public class UserController {
     
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
     
-    public UserController(UserRepository userRepository) {
+    public UserController(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
     
     @GetMapping
@@ -71,12 +74,49 @@ public class UserController {
             }
         }
         
-        // NOTE: This is a simplified demo implementation with plain text passwords.
-        // In production, use BCrypt or another secure hashing algorithm.
-        User newUser = new User(username, name, password, email, role);
+        // Hash the password before saving
+        String hashedPassword = passwordEncoder.encode(password);
+        User newUser = new User(username, name, hashedPassword, email, role);
         User savedUser = userRepository.save(newUser);
         
         return ResponseEntity.status(HttpStatus.CREATED).body(toUserResponse(savedUser));
+    }
+    
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateUser(
+            @PathVariable Long id,
+            @RequestBody Map<String, String> userData) {
+        
+        return userRepository.findById(id)
+                .map(user -> {
+                    String username = userData.get("username");
+                    String name = userData.get("name");
+                    String email = userData.get("email");
+                    
+                    // Check if username is being changed and if it already exists
+                    if (username != null && !username.equals(user.getUsername())) {
+                        if (userRepository.existsByUsername(username)) {
+                            return ResponseEntity.badRequest().body(Map.of("error", "Username already exists"));
+                        }
+                        user.setUsername(username);
+                    }
+                    
+                    // Check if email is being changed and if it already exists
+                    if (email != null && !email.equals(user.getEmail())) {
+                        if (userRepository.existsByEmail(email)) {
+                            return ResponseEntity.badRequest().body(Map.of("error", "Email already exists"));
+                        }
+                        user.setEmail(email);
+                    }
+                    
+                    if (name != null) {
+                        user.setName(name);
+                    }
+                    
+                    User updatedUser = userRepository.save(user);
+                    return ResponseEntity.ok(toUserResponse(updatedUser));
+                })
+                .orElse(ResponseEntity.notFound().build());
     }
     
     @PutMapping("/{id}/role")

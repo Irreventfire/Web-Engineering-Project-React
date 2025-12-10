@@ -65,7 +65,7 @@ const AppContent: React.FC = () => {
           )}
         </div>
         <div className="user-info">
-          <span className="user-name">{user?.name} ({user?.role})</span>
+          <span className="user-name">{user?.name}</span>
           <div className="settings-dropdown">
             <button 
               className="btn btn-primary settings-btn" 

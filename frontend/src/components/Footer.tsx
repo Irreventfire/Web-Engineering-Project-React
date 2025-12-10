@@ -28,7 +28,7 @@ const Footer: React.FC = () => {
           <ul>
             <li>
               <a 
-                href="/Programmentwurf-webEng-Frontend (2).pdf" 
+                href="/projektbeschreibung.html" 
                 target="_blank" 
                 rel="noopener noreferrer"
               >

@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useLanguage } from '../contexts/LanguageContext';
-import { getUsers, updateUserRole, updateUserEnabled, deleteUser, createUser } from '../services/api';
+import { getUsers, updateUserRole, updateUserEnabled, deleteUser, createUser, updateUser } from '../services/api';
 import { User, UserRole } from '../types';
 
 const AdminDashboard: React.FC = () => {
@@ -10,12 +10,18 @@ const AdminDashboard: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [showAddModal, setShowAddModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [editingUser, setEditingUser] = useState<User | null>(null);
+  const [editName, setEditName] = useState('');
+  const [editEmail, setEditEmail] = useState('');
+  const [editUsername, setEditUsername] = useState('');
   const [newUsername, setNewUsername] = useState('');
   const [newName, setNewName] = useState('');
   const [newEmail, setNewEmail] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [newRole, setNewRole] = useState<UserRole>(UserRole.USER);
   const [addingUser, setAddingUser] = useState(false);
+  const [updatingUser, setUpdatingUser] = useState(false);
   const [expandedUserId, setExpandedUserId] = useState<number | null>(null);
   const { user: currentUser, isAdmin } = useAuth();
   const { t } = useLanguage();
@@ -132,6 +138,43 @@ const AdminDashboard: React.FC = () => {
       } else {
         setError(t('failedToDeleteUser'));
       }
+    }
+  };
+
+  const handleEditUser = (user: User) => {
+    setEditingUser(user);
+    setEditUsername(user.username);
+    setEditName(user.name);
+    setEditEmail(user.email);
+    setShowEditModal(true);
+    setError('');
+  };
+
+  const handleUpdateUser = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingUser) return;
+
+    setError('');
+    setUpdatingUser(true);
+
+    try {
+      const response = await updateUser(editingUser.id, {
+        username: editUsername,
+        name: editName,
+        email: editEmail
+      });
+      setUsers(users.map(u => u.id === editingUser.id ? response.data : u));
+      setShowEditModal(false);
+      setEditingUser(null);
+    } catch (err: unknown) {
+      if (err && typeof err === 'object' && 'response' in err) {
+        const axiosError = err as { response?: { data?: { error?: string } } };
+        setError(axiosError.response?.data?.error || t('failedToUpdateUser'));
+      } else {
+        setError(t('failedToUpdateUser'));
+      }
+    } finally {
+      setUpdatingUser(false);
     }
   };
 
@@ -259,6 +302,58 @@ const AdminDashboard: React.FC = () => {
         </div>
       )}
       
+      {/* Edit User Modal */}
+      {showEditModal && editingUser && (
+        <div className="modal-overlay" onClick={() => setShowEditModal(false)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h3>{t('editUser')}</h3>
+              <button className="modal-close" onClick={() => setShowEditModal(false)}>&times;</button>
+            </div>
+            <form onSubmit={handleUpdateUser}>
+              <div className="form-group">
+                <label htmlFor="edit-username">{t('username')}</label>
+                <input
+                  type="text"
+                  id="edit-username"
+                  value={editUsername}
+                  onChange={(e) => setEditUsername(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="edit-name">{t('name')}</label>
+                <input
+                  type="text"
+                  id="edit-name"
+                  value={editName}
+                  onChange={(e) => setEditName(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="edit-email">{t('email')}</label>
+                <input
+                  type="email"
+                  id="edit-email"
+                  value={editEmail}
+                  onChange={(e) => setEditEmail(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="form-actions">
+                <button type="button" className="btn btn-secondary" onClick={() => setShowEditModal(false)}>
+                  {t('cancel')}
+                </button>
+                <button type="submit" className="btn btn-primary" disabled={updatingUser}>
+                  {updatingUser ? t('updating') : t('update')}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+      
       <div className="user-list-modern">
         {users.map((user) => {
           const isExpanded = expandedUserId === user.id;
@@ -331,6 +426,12 @@ const AdminDashboard: React.FC = () => {
                         </select>
                       </div>
                       <div className="action-buttons-section">
+                        <button
+                          className="btn-action btn-secondary"
+                          onClick={() => handleEditUser(user)}
+                        >
+                          ✎ {t('edit')}
+                        </button>
                         <button
                           className={`btn-action ${user.enabled ? 'btn-warning' : 'btn-success'}`}
                           onClick={() => handleToggleEnabled(user.id, !user.enabled)}

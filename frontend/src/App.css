@@ -658,8 +658,13 @@ tbody tr:last-child td {
 }
 
 .user-name {
-  color: #ecf0f1;
+  color: #2c3e50;
   font-size: 0.9rem;
+  font-weight: 500;
+  background: rgba(255, 255, 255, 0.95);
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .btn-logout {

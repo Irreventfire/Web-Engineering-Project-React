@@ -40,6 +40,8 @@ export const updateUserRole = (id: number, role: UserRole) =>
   api.put<User>(`/users/${id}/role`, { role });
 export const updateUserEnabled = (id: number, enabled: boolean) => 
   api.put<User>(`/users/${id}/enabled`, { enabled });
+export const updateUser = (id: number, data: { name?: string; email?: string; username?: string }) => 
+  api.put<User>(`/users/${id}`, data);
 export const deleteUser = (id: number) => api.delete(`/users/${id}`);
 
 // Inspection endpoints

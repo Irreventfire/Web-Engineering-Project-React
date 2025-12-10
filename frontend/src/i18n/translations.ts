@@ -53,6 +53,10 @@ export const translations = {
     failedToUpdateRole: 'Failed to update role',
     failedToUpdateStatus: 'Failed to update status',
     failedToDeleteUser: 'Failed to delete user',
+    editUser: 'Edit User',
+    update: 'Update',
+    updating: 'Updating...',
+    failedToUpdateUser: 'Failed to update user',
     
     // Add User Modal
     addNewUser: 'Add New User',
@@ -231,6 +235,10 @@ export const translations = {
     failedToUpdateRole: 'Rolle konnte nicht aktualisiert werden',
     failedToUpdateStatus: 'Status konnte nicht aktualisiert werden',
     failedToDeleteUser: 'Benutzer konnte nicht gelöscht werden',
+    editUser: 'Benutzer bearbeiten',
+    update: 'Aktualisieren',
+    updating: 'Aktualisierung läuft...',
+    failedToUpdateUser: 'Benutzer konnte nicht aktualisiert werden',
     
     // Add User Modal
     addNewUser: 'Neuen Benutzer hinzufügen',

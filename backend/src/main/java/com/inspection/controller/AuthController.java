@@ -34,7 +34,8 @@ public class AuthController {
             return ResponseEntity.badRequest().body(Map.of("error", "Username and password are required"));
         }
         
-        Optional<User> userOpt = userRepository.findByUsername(username);
+        // Case-insensitive username lookup
+        Optional<User> userOpt = userRepository.findByUsernameIgnoreCase(username);
         
         if (userOpt.isEmpty()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "Invalid credentials"));

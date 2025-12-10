@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projektbeschreibung - Inspektionsmanagement System</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+            color: #2c3e50;
+            background-color: #f5f6fa;
+        }
+        h1 {
+            color: #2c3e50;
+            border-bottom: 3px solid #546e7a;
+            padding-bottom: 0.5rem;
+            margin-bottom: 2rem;
+        }
+        h2 {
+            color: #546e7a;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+        h3 {
+            color: #546e7a;
+            margin-top: 1.5rem;
+        }
+        .container {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        ul, ol {
+            margin: 1rem 0;
+            padding-left: 2rem;
+        }
+        li {
+            margin: 0.5rem 0;
+        }
+        .section {
+            margin-bottom: 2rem;
+        }
+        .highlight {
+            background-color: #e3f2fd;
+            padding: 1rem;
+            border-left: 4px solid #3498db;
+            border-radius: 4px;
+            margin: 1rem 0;
+        }
+        .tech-stack {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+        .tech-item {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .back-link {
+            display: inline-block;
+            margin-top: 2rem;
+            padding: 0.75rem 1.5rem;
+            background: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: background 0.3s;
+        }
+        .back-link:hover {
+            background: #2980b9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Inspektionsmanagement System</h1>
+        
+        <div class="section">
+            <h2>Projektübersicht</h2>
+            <p>
+                Das Inspektionsmanagement System ist eine moderne Webanwendung zur Verwaltung und Durchführung 
+                von Inspektionen in industriellen Anlagen. Das System ermöglicht die strukturierte Erfassung, 
+                Dokumentation und Auswertung von Prüfungen nach vordefinierten Checklisten.
+            </p>
+        </div>
+
+        <div class="section">
+            <h2>Hauptfunktionen</h2>
+            
+            <h3>1. Benutzerverwaltung</h3>
+            <ul>
+                <li><strong>Rollensystem:</strong> Admin, User und Viewer mit unterschiedlichen Berechtigungen</li>
+                <li><strong>Benutzerkontenverwaltung:</strong> Erstellen, Bearbeiten und Deaktivieren von Benutzerkonten</li>
+                <li><strong>Sichere Authentifizierung:</strong> BCrypt-verschlüsselte Passwörter</li>
+                <li><strong>Mehrsprachige Oberfläche:</strong> Deutsch und Englisch</li>
+            </ul>
+
+            <h3>2. Checklisten-Management</h3>
+            <ul>
+                <li>Erstellen und Verwalten von Inspektionschecklisten</li>
+                <li>Hinzufügen von Prüfpunkten mit Beschreibungen</li>
+                <li>Upload von Referenzfotos für gewünschte Zustände</li>
+                <li>Flexible Strukturierung nach Anlagenbereichen</li>
+            </ul>
+
+            <h3>3. Inspektionsdurchführung</h3>
+            <ul>
+                <li>Planung und Zuweisung von Inspektionen</li>
+                <li>Schrittweise Abarbeitung von Checklisten</li>
+                <li>Bewertung: Erfüllt / Nicht erfüllt / Nicht zutreffend</li>
+                <li>Kommentarfunktion für Bemerkungen</li>
+                <li>Foto-Upload des aktuellen Zustands</li>
+                <li>Vergleich mit Referenzfotos</li>
+            </ul>
+
+            <h3>4. Reporting und Auswertung</h3>
+            <ul>
+                <li>Übersichtliches Dashboard mit Statistiken</li>
+                <li>Detaillierte Inspektionsberichte</li>
+                <li>Status-Tracking (Geplant, In Bearbeitung, Abgeschlossen)</li>
+                <li>Export-Funktionalität</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>Technologie-Stack</h2>
+            
+            <h3>Frontend</h3>
+            <div class="tech-stack">
+                <div class="tech-item">
+                    <strong>React 18</strong>
+                    <p>UI Framework</p>
+                </div>
+                <div class="tech-item">
+                    <strong>TypeScript</strong>
+                    <p>Typsicherheit</p>
+                </div>
+                <div class="tech-item">
+                    <strong>React Router</strong>
+                    <p>Navigation</p>
+                </div>
+                <div class="tech-item">
+                    <strong>Axios</strong>
+                    <p>HTTP Client</p>
+                </div>
+            </div>
+
+            <h3>Backend</h3>
+            <div class="tech-stack">
+                <div class="tech-item">
+                    <strong>Spring Boot 3</strong>
+                    <p>Application Framework</p>
+                </div>
+                <div class="tech-item">
+                    <strong>Spring Data JPA</strong>
+                    <p>Datenpersistenz</p>
+                </div>
+                <div class="tech-item">
+                    <strong>H2 Database</strong>
+                    <p>Embedded Database</p>
+                </div>
+                <div class="tech-item">
+                    <strong>Spring Security</strong>
+                    <p>BCrypt Encryption</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Architektur</h2>
+            
+            <h3>Frontend-Architektur</h3>
+            <ul>
+                <li><strong>Component-Based:</strong> Modulare React-Komponenten für Wiederverwendbarkeit</li>
+                <li><strong>Context API:</strong> Zentrales State Management für Authentifizierung und Sprache</li>
+                <li><strong>Protected Routes:</strong> Rollenbasierte Zugriffskontrolle</li>
+                <li><strong>Responsive Design:</strong> Mobile-first Ansatz mit modernem UI</li>
+            </ul>
+
+            <h3>Backend-Architektur</h3>
+            <ul>
+                <li><strong>RESTful API:</strong> Klare API-Struktur mit standardisierten Endpoints</li>
+                <li><strong>MVC Pattern:</strong> Controller, Service, Repository Schichten</li>
+                <li><strong>JPA Entities:</strong> Objekt-relationales Mapping</li>
+                <li><strong>File Upload:</strong> Multipart-Datei-Handling für Bildupload</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>Datenbank-Schema</h2>
+            
+            <h3>Hauptentitäten</h3>
+            <ul>
+                <li><strong>User:</strong> Benutzerdaten, Rollen, Authentifizierung</li>
+                <li><strong>Checklist:</strong> Inspektionschecklisten mit Namen und Beschreibung</li>
+                <li><strong>ChecklistItem:</strong> Einzelne Prüfpunkte mit Referenzfotos</li>
+                <li><strong>Inspection:</strong> Inspektionsaufträge mit Anlage, Datum, Verantwortlichem</li>
+                <li><strong>Result:</strong> Prüfergebnisse mit Status, Kommentaren und Fotos</li>
+            </ul>
+
+            <h3>Beziehungen</h3>
+            <ul>
+                <li>One-to-Many: Checklist → ChecklistItems</li>
+                <li>Many-to-One: Inspection → Checklist</li>
+                <li>One-to-Many: Inspection → Results</li>
+                <li>Many-to-One: Result → ChecklistItem</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>Sicherheitskonzept</h2>
+            <ul>
+                <li><strong>Passwort-Hashing:</strong> BCrypt mit Salt für sichere Passwortspeicherung</li>
+                <li><strong>Rollenverwaltung:</strong> Granulare Berechtigungssteuerung</li>
+                <li><strong>CORS-Konfiguration:</strong> Kontrollierter Cross-Origin-Zugriff</li>
+                <li><strong>Input-Validierung:</strong> Serverseitige Validierung aller Eingaben</li>
+                <li><strong>Persistente Datenhaltung:</strong> File-based H2 Database für Datensicherheit</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>Benutzerrollen</h2>
+            
+            <div class="highlight">
+                <h3>Administrator</h3>
+                <ul>
+                    <li>Vollständige Benutzerverwaltung</li>
+                    <li>Erstellen und Bearbeiten von Checklisten</li>
+                    <li>Durchführen und Verwalten von Inspektionen</li>
+                    <li>Zugriff auf alle Berichte</li>
+                </ul>
+            </div>
+
+            <div class="highlight">
+                <h3>User</h3>
+                <ul>
+                    <li>Erstellen und Bearbeiten von Checklisten</li>
+                    <li>Durchführen von Inspektionen</li>
+                    <li>Zugriff auf eigene Berichte</li>
+                </ul>
+            </div>
+
+            <div class="highlight">
+                <h3>Viewer</h3>
+                <ul>
+                    <li>Nur-Lese-Zugriff auf Dashboard</li>
+                    <li>Ansicht von Inspektionen und Berichten</li>
+                    <li>Keine Bearbeitungsrechte</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Workflow</h2>
+            <ol>
+                <li><strong>Checkliste erstellen:</strong> Admin/User erstellt eine Checkliste mit Prüfpunkten</li>
+                <li><strong>Inspektion planen:</strong> Neue Inspektion mit Anlage, Datum und Checkliste anlegen</li>
+                <li><strong>Inspektion starten:</strong> Status wechselt zu "In Bearbeitung"</li>
+                <li><strong>Prüfpunkte abarbeiten:</strong> Jeder Punkt wird bewertet und dokumentiert</li>
+                <li><strong>Fotos hochladen:</strong> Aktueller Zustand wird fotografisch festgehalten</li>
+                <li><strong>Inspektion abschließen:</strong> Status wechselt zu "Abgeschlossen"</li>
+                <li><strong>Bericht erstellen:</strong> Automatischer Report mit allen Ergebnissen</li>
+            </ol>
+        </div>
+
+        <div class="section">
+            <h2>Installation und Deployment</h2>
+            
+            <h3>Voraussetzungen</h3>
+            <ul>
+                <li>Node.js 16+ und npm</li>
+                <li>Java 17+</li>
+                <li>Gradle</li>
+            </ul>
+
+            <h3>Backend starten</h3>
+            <ol>
+                <li>Navigiere zum Backend-Verzeichnis</li>
+                <li>Führe aus: <code>./gradlew bootRun</code></li>
+                <li>Server läuft auf: http://localhost:8080</li>
+            </ol>
+
+            <h3>Frontend starten</h3>
+            <ol>
+                <li>Navigiere zum Frontend-Verzeichnis</li>
+                <li>Installiere Dependencies: <code>npm install</code></li>
+                <li>Starte Development Server: <code>npm start</code></li>
+                <li>Anwendung öffnet sich auf: http://localhost:3000</li>
+            </ol>
+        </div>
+
+        <div class="section">
+            <h2>Demo-Accounts</h2>
+            <ul>
+                <li><strong>Admin:</strong> admin / admin123</li>
+                <li><strong>User:</strong> user / user123</li>
+                <li><strong>Viewer:</strong> viewer / viewer123</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>Zukünftige Erweiterungen</h2>
+            <ul>
+                <li>PDF-Export von Inspektionsberichten</li>
+                <li>E-Mail-Benachrichtigungen</li>
+                <li>Dashboard-Widgets und Diagramme</li>
+                <li>Mobile App (iOS/Android)</li>
+                <li>Erweiterte Suchfunktionen und Filter</li>
+                <li>Audit-Trail für Änderungsverfolgung</li>
+                <li>Integration mit externen Systemen</li>
+            </ul>
+        </div>
+
+        <a href="/" class="back-link">← Zurück zur Anwendung</a>
+    </div>
+</body>
+</html>
