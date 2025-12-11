@@ -46,6 +46,10 @@ export const updateUserEnabled = (id: number, enabled: boolean) =>
 export const updateUser = (id: number, data: { name?: string; email?: string; username?: string }) => 
   api.put<User>(`/users/${id}`, data);
 export const deleteUser = (id: number) => api.delete(`/users/${id}`);
+export const changePassword = (id: number, oldPassword: string, newPassword: string) =>
+  api.put(`/users/${id}/password`, { oldPassword, newPassword });
+export const resetPassword = (id: number, newPassword: string) =>
+  api.put(`/users/${id}/reset-password`, { newPassword });
 
 // Inspection endpoints
 export const getInspections = () => api.get<Inspection[]>('/inspections');

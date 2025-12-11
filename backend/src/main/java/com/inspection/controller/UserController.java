@@ -193,6 +193,75 @@ public class UserController {
         return ResponseEntity.notFound().build();
     }
     
+    @PutMapping("/{id}/password")
+    public ResponseEntity<?> changePassword(
+            @PathVariable Long id,
+            @RequestBody Map<String, String> body,
+            @RequestHeader(value = "X-User-Id", required = false) Long currentUserId) {
+        
+        String oldPassword = body.get("oldPassword");
+        String newPassword = body.get("newPassword");
+        
+        if (newPassword == null || newPassword.isEmpty()) {
+            return ResponseEntity.badRequest().body(Map.of("error", "New password is required"));
+        }
+        
+        // Validate password length
+        if (newPassword.length() < 6) {
+            return ResponseEntity.badRequest().body(Map.of("error", "Password must be at least 6 characters"));
+        }
+        
+        return userRepository.findById(id)
+                .map(user -> {
+                    // If user is changing their own password, verify old password
+                    if (currentUserId != null && currentUserId.equals(id)) {
+                        if (oldPassword == null || oldPassword.isEmpty()) {
+                            return ResponseEntity.badRequest().body(Map.of("error", "Old password is required"));
+                        }
+                        if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
+                            return ResponseEntity.badRequest().body(Map.of("error", "Old password is incorrect"));
+                        }
+                    }
+                    
+                    // Hash and set new password
+                    String hashedPassword = passwordEncoder.encode(newPassword);
+                    user.setPassword(hashedPassword);
+                    userRepository.save(user);
+                    
+                    return ResponseEntity.ok(Map.of("message", "Password changed successfully"));
+                })
+                .orElse(ResponseEntity.notFound().build());
+    }
+    
+    @PutMapping("/{id}/reset-password")
+    public ResponseEntity<?> resetPassword(
+            @PathVariable Long id,
+            @RequestBody Map<String, String> body,
+            @RequestHeader(value = "X-User-Id", required = false) Long currentUserId) {
+        
+        String newPassword = body.get("newPassword");
+        
+        if (newPassword == null || newPassword.isEmpty()) {
+            return ResponseEntity.badRequest().body(Map.of("error", "New password is required"));
+        }
+        
+        // Validate password length
+        if (newPassword.length() < 6) {
+            return ResponseEntity.badRequest().body(Map.of("error", "Password must be at least 6 characters"));
+        }
+        
+        // Admin can reset password without old password (for forgot password scenario)
+        return userRepository.findById(id)
+                .map(user -> {
+                    String hashedPassword = passwordEncoder.encode(newPassword);
+                    user.setPassword(hashedPassword);
+                    userRepository.save(user);
+                    
+                    return ResponseEntity.ok(Map.of("message", "Password reset successfully"));
+                })
+                .orElse(ResponseEntity.notFound().build());
+    }
+    
     private Map<String, Object> toUserResponse(User user) {
         Map<String, Object> response = new HashMap<>();
         response.put("id", user.getId());

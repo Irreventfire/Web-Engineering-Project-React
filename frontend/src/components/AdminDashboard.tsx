@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useLanguage } from '../contexts/LanguageContext';
-import { getUsers, updateUserRole, updateUserEnabled, deleteUser, createUser, updateUser } from '../services/api';
+import { getUsers, updateUserRole, updateUserEnabled, deleteUser, createUser, updateUser, resetPassword } from '../services/api';
 import { User, UserRole } from '../types';
 
 const AdminDashboard: React.FC = () => {
@@ -11,6 +11,11 @@ const AdminDashboard: React.FC = () => {
   const [error, setError] = useState('');
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
+  const [showResetPasswordModal, setShowResetPasswordModal] = useState(false);
+  const [resetPasswordUser, setResetPasswordUser] = useState<User | null>(null);
+  const [resetPasswordValue, setResetPasswordValue] = useState('');
+  const [resetPasswordConfirm, setResetPasswordConfirm] = useState('');
+  const [resettingPassword, setResettingPassword] = useState(false);
   const [editingUser, setEditingUser] = useState<User | null>(null);
   const [editName, setEditName] = useState('');
   const [editEmail, setEditEmail] = useState('');
@@ -175,6 +180,61 @@ const AdminDashboard: React.FC = () => {
       }
     } finally {
       setUpdatingUser(false);
+    }
+  };
+
+  const handleResetPassword = (user: User) => {
+    setResetPasswordUser(user);
+    setResetPasswordValue('');
+    setResetPasswordConfirm('');
+    setShowResetPasswordModal(true);
+    setError('');
+  };
+
+  const handleResetPasswordSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!resetPasswordUser) return;
+
+    setError('');
+
+    // Validate passwords
+    if (!resetPasswordValue) {
+      setError(t('newPasswordRequired'));
+      return;
+    }
+
+    if (resetPasswordValue.length < 6) {
+      setError(t('passwordTooShort'));
+      return;
+    }
+
+    if (resetPasswordValue !== resetPasswordConfirm) {
+      setError(t('passwordMismatch'));
+      return;
+    }
+
+    if (!window.confirm(t('resetPasswordConfirm'))) {
+      return;
+    }
+
+    setResettingPassword(true);
+
+    try {
+      await resetPassword(resetPasswordUser.id, resetPasswordValue);
+      setShowResetPasswordModal(false);
+      setResetPasswordUser(null);
+      setResetPasswordValue('');
+      setResetPasswordConfirm('');
+      alert(t('passwordResetSuccess'));
+    } catch (err: unknown) {
+      if (err && typeof err === 'object' && 'response' in err) {
+        const axiosError = err as { response?: { data?: { error?: string } } };
+        setError(axiosError.response?.data?.error || t('failedToResetPassword'));
+      } else {
+        setError(t('failedToResetPassword'));
+      }
+    } finally {
+      setResettingPassword(false);
     }
   };
 
@@ -354,6 +414,50 @@ const AdminDashboard: React.FC = () => {
         </div>
       )}
       
+      {/* Reset Password Modal */}
+      {showResetPasswordModal && resetPasswordUser && (
+        <div className="modal-overlay" onClick={() => setShowResetPasswordModal(false)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h3>{t('resetPassword')} - {resetPasswordUser.username}</h3>
+              <button className="modal-close" onClick={() => setShowResetPasswordModal(false)}>&times;</button>
+            </div>
+            <form onSubmit={handleResetPasswordSubmit}>
+              <div className="form-group">
+                <label htmlFor="reset-password">{t('newPassword')}</label>
+                <input
+                  type="password"
+                  id="reset-password"
+                  value={resetPasswordValue}
+                  onChange={(e) => setResetPasswordValue(e.target.value)}
+                  required
+                  placeholder={t('enterNewPassword')}
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="reset-password-confirm">{t('confirmPassword')}</label>
+                <input
+                  type="password"
+                  id="reset-password-confirm"
+                  value={resetPasswordConfirm}
+                  onChange={(e) => setResetPasswordConfirm(e.target.value)}
+                  required
+                  placeholder={t('confirmNewPassword')}
+                />
+              </div>
+              <div className="form-actions">
+                <button type="button" className="btn btn-secondary" onClick={() => setShowResetPasswordModal(false)}>
+                  {t('cancel')}
+                </button>
+                <button type="submit" className="btn btn-primary" disabled={resettingPassword}>
+                  {resettingPassword ? t('updating') : t('resetPassword')}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+      
       <div className="user-list-modern">
         {users.map((user) => {
           const isExpanded = expandedUserId === user.id;
@@ -431,6 +535,12 @@ const AdminDashboard: React.FC = () => {
                           onClick={() => handleEditUser(user)}
                         >
                           ✎ {t('edit')}
+                        </button>
+                        <button
+                          className="btn-action btn-primary"
+                          onClick={() => handleResetPassword(user)}
+                        >
+                          🔑 {t('resetPassword')}
                         </button>
                         <button
                           className={`btn-action ${user.enabled ? 'btn-warning' : 'btn-success'}`}

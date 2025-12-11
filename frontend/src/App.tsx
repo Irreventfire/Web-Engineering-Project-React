@@ -14,6 +14,7 @@ import Login from './components/Login';
 import AdminDashboard from './components/AdminDashboard';
 import ProtectedRoute from './components/ProtectedRoute';
 import Footer from './components/Footer';
+import ChangePassword from './components/ChangePassword';
 import { UserRole } from './types';
 
 const AppContent: React.FC = () => {
@@ -89,6 +90,14 @@ const AppContent: React.FC = () => {
                   </select>
                 </div>
                 <div className="dropdown-divider"></div>
+                <NavLink 
+                  to="/change-password" 
+                  className="dropdown-item-link"
+                  onClick={() => setShowSettingsDropdown(false)}
+                >
+                  {t('changePassword')}
+                </NavLink>
+                <div className="dropdown-divider"></div>
                 <button className="dropdown-item-button" onClick={() => { logout(); setShowSettingsDropdown(false); }}>
                   {t('logout')}
                 </button>
@@ -128,6 +137,7 @@ const AppContent: React.FC = () => {
           />
           <Route path="/inspections/:id/report" element={<InspectionReport />} />
           <Route path="/checklists" element={<ChecklistManagement />} />
+          <Route path="/change-password" element={<ChangePassword />} />
           <Route 
             path="/admin" 
             element={
