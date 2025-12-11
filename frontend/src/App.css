@@ -969,12 +969,12 @@ tbody tr:last-child td {
   border-top: 1px solid #e9ecef;
 }
 
-.preview-image-large {
-  max-width: 100%;
-  max-height: 200px;
+.preview-image {
+  max-width: 80px;
+  max-height: 80px;
   border-radius: 4px;
   border: 1px solid #e9ecef;
-  margin-top: 0.5rem;
+  object-fit: contain;
 }
 
 .desired-state-container {
@@ -1326,6 +1326,19 @@ tbody tr:last-child td {
 .photo-preview-container {
   position: relative;
   margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.preview-image-large {
+  max-width: 100%;
+  max-height: 200px;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+  display: block;
+  object-fit: contain;
+  margin: 0 auto;
 }
 
 .btn-remove-photo {
@@ -1333,15 +1346,17 @@ tbody tr:last-child td {
   color: white;
   border: none;
   padding: 0.5rem 1rem;
-  border-radius: 4px;
+  border-radius: 6px;
   cursor: pointer;
   font-size: 0.85rem;
-  margin-top: 0.5rem;
-  transition: background 0.2s ease;
+  transition: all 0.2s ease;
+  align-self: flex-start;
 }
 
 .btn-remove-photo:hover {
   background: #c82333;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(220, 53, 69, 0.3);
 }
 
 /* Modern Inspection List Styles */
