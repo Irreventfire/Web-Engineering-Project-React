@@ -4,7 +4,8 @@ import { getInspection, getResultsByInspection } from '../services/api';
 import { Inspection, Result, ResultStatus } from '../types';
 import { useLanguage } from '../contexts/LanguageContext';
 
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8080/api';
+const API_BASE_URL = process.env.REACT_APP_API_URL || 
+  `${window.location.protocol}//${window.location.hostname}:8080/api`;
 
 const InspectionReport: React.FC = () => {
   const { id } = useParams<{ id: string }>();
