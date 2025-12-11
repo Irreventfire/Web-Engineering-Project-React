@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useState, ReactNode } from 'react';
 import { translations, Language, TranslationKey } from '../i18n/translations';
 
 interface LanguageContextType {
@@ -14,14 +14,16 @@ interface LanguageProviderProps {
 }
 
 export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) => {
-  const [language, setLanguageState] = useState<Language>('de');
-
-  useEffect(() => {
+  // Initialize language from localStorage synchronously to avoid initial English flash
+  const getInitialLanguage = (): Language => {
     const storedLanguage = localStorage.getItem('language') as Language;
-    if (storedLanguage && (storedLanguage === 'en' || storedLanguage === 'de')) {
-      setLanguageState(storedLanguage);
+    if (storedLanguage === 'en' || storedLanguage === 'de') {
+      return storedLanguage;
     }
-  }, []);
+    return 'de'; // Default to German
+  };
+
+  const [language, setLanguageState] = useState<Language>(getInitialLanguage());
 
   const setLanguage = (lang: Language) => {
     setLanguageState(lang);

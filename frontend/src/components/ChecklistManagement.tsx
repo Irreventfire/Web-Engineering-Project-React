@@ -18,7 +18,7 @@ const ChecklistManagement: React.FC = () => {
   const [editingChecklist, setEditingChecklist] = useState<Checklist | null>(null);
   const [editingItem, setEditingItem] = useState<ChecklistItem | null>(null);
   const [expandedChecklistId, setExpandedChecklistId] = useState<number | null>(null);
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const { canEdit } = useAuth();
 
   useEffect(() => {
@@ -295,7 +295,7 @@ const ChecklistManagement: React.FC = () => {
       {/* Create/Edit Checklist Modal */}
       {showModal && (
         <div className="modal-overlay" onClick={() => { setShowModal(false); setEditingChecklist(null); }}>
-          <div className="modal-content" onClick={e => e.stopPropagation()}>
+          <div className="modal-content" onClick={e => e.stopPropagation()} key={language}>
             <div className="modal-header">
               <h3>{editingChecklist ? t('editChecklist') : t('newChecklist')}</h3>
               <button className="modal-close" onClick={() => { setShowModal(false); setEditingChecklist(null); }}>×</button>
@@ -338,7 +338,7 @@ const ChecklistManagement: React.FC = () => {
       {/* Add/Edit Item Modal */}
       {showItemModal && (
         <div className="modal-overlay" onClick={() => { setShowItemModal(false); setEditingItem(null); }}>
-          <div className="modal-content" onClick={e => e.stopPropagation()}>
+          <div className="modal-content" onClick={e => e.stopPropagation()} key={language}>
             <div className="modal-header">
               <h3>{editingItem ? t('editChecklistItem') : t('addChecklistItem')}</h3>
               <button className="modal-close" onClick={() => { setShowItemModal(false); setEditingItem(null); }}>×</button>

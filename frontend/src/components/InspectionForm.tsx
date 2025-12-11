@@ -2,11 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { createInspection, getInspection, updateInspection, getChecklists } from '../services/api';
 import { Inspection, Checklist } from '../types';
+import { useLanguage } from '../contexts/LanguageContext';
 
 const InspectionForm: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const isEdit = id !== 'new' && id !== undefined;
+  const { t } = useLanguage();
 
   const [formData, setFormData] = useState({
     facilityName: '',
@@ -82,11 +84,11 @@ const InspectionForm: React.FC = () => {
 
   return (
     <div className="form-container">
-      <h2>{isEdit ? 'Edit Inspection' : 'New Inspection'}</h2>
+      <h2>{isEdit ? t('editInspection') : t('createInspection')}</h2>
       
       <form onSubmit={handleSubmit}>
         <div className="form-group">
-          <label htmlFor="facilityName">Facility Name *</label>
+          <label htmlFor="facilityName">{t('facilityName')} *</label>
           <input
             type="text"
             id="facilityName"
@@ -94,12 +96,12 @@ const InspectionForm: React.FC = () => {
             value={formData.facilityName}
             onChange={handleChange}
             required
-            placeholder="Enter facility name"
+            placeholder={t('facilityName')}
           />
         </div>
 
         <div className="form-group">
-          <label htmlFor="inspectionDate">Inspection Date *</label>
+          <label htmlFor="inspectionDate">{t('inspectionDate')} *</label>
           <input
             type="date"
             id="inspectionDate"
@@ -111,7 +113,7 @@ const InspectionForm: React.FC = () => {
         </div>
 
         <div className="form-group">
-          <label htmlFor="responsibleEmployee">Responsible Employee *</label>
+          <label htmlFor="responsibleEmployee">{t('responsibleEmployee')} *</label>
           <input
             type="text"
             id="responsibleEmployee"
@@ -119,19 +121,19 @@ const InspectionForm: React.FC = () => {
             value={formData.responsibleEmployee}
             onChange={handleChange}
             required
-            placeholder="Enter employee name"
+            placeholder={t('responsibleEmployee')}
           />
         </div>
 
         <div className="form-group">
-          <label htmlFor="checklistId">Checklist</label>
+          <label htmlFor="checklistId">{t('checklist')}</label>
           <select
             id="checklistId"
             name="checklistId"
             value={formData.checklistId}
             onChange={handleChange}
           >
-            <option value="">Select a checklist (optional)</option>
+            <option value="">{t('selectChecklistOptional')}</option>
             {checklists.map(checklist => (
               <option key={checklist.id} value={checklist.id}>
                 {checklist.name}
@@ -146,14 +148,14 @@ const InspectionForm: React.FC = () => {
             className="btn btn-secondary"
             onClick={() => navigate('/inspections')}
           >
-            Cancel
+            {t('cancel')}
           </button>
           <button 
             type="submit" 
             className="btn btn-primary"
             disabled={loading}
           >
-            {loading ? 'Saving...' : (isEdit ? 'Update' : 'Create')}
+            {loading ? t('saving') : (isEdit ? t('save') : t('create'))}
           </button>
         </div>
       </form>
