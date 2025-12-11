@@ -42,7 +42,7 @@ export interface Inspection {
   id: number;
   facilityName: string;
   inspectionDate: string;
-  responsibleEmployee: string;
+  responsibleUser: User;
   status: InspectionStatus;
   checklist: Checklist | null;
   results: Result[];

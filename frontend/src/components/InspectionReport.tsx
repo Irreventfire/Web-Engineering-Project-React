@@ -95,7 +95,7 @@ const InspectionReport: React.FC = () => {
         <h2>{inspection.facilityName}</h2>
         <p>
           {t('date')}: {new Date(inspection.inspectionDate).toLocaleDateString()} | 
-          {t('inspector')}: {inspection.responsibleEmployee}
+          {t('inspector')}: {inspection.responsibleUser?.name}
         </p>
         {inspection.checklist && (
           <p>{t('checklist')}: {inspection.checklist.name}</p>

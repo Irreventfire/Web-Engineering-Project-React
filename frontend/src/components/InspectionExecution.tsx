@@ -184,7 +184,7 @@ const InspectionExecution: React.FC = () => {
         <h2>{inspection.facilityName}</h2>
         <div className="inspection-meta">
           <span>{t('date')}: {new Date(inspection.inspectionDate).toLocaleDateString()}</span>
-          <span>{t('employee')}: {inspection.responsibleEmployee}</span>
+          <span>{t('employee')}: {inspection.responsibleUser?.name}</span>
           <span>{t('checklist')}: {inspection.checklist.name}</span>
         </div>
       </div>

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { createInspection, getInspection, updateInspection, getChecklists } from '../services/api';
-import { Inspection, Checklist } from '../types';
+import { createInspection, getInspection, updateInspection, getChecklists, getUsers } from '../services/api';
+import { Checklist, User } from '../types';
 import { useLanguage } from '../contexts/LanguageContext';
 
 const InspectionForm: React.FC = () => {
@@ -13,14 +13,16 @@ const InspectionForm: React.FC = () => {
   const [formData, setFormData] = useState({
     facilityName: '',
     inspectionDate: new Date().toISOString().split('T')[0],
-    responsibleEmployee: '',
+    responsibleUserId: '',
     checklistId: ''
   });
   const [checklists, setChecklists] = useState<Checklist[]>([]);
+  const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     fetchChecklists();
+    fetchUsers();
     if (isEdit && id) {
       fetchInspection(parseInt(id));
     }
@@ -35,6 +37,17 @@ const InspectionForm: React.FC = () => {
     }
   };
 
+  const fetchUsers = async () => {
+    try {
+      const response = await getUsers();
+      // Only show users with USER role
+      const userRoleUsers = response.data.filter(u => u.role === 'USER');
+      setUsers(userRoleUsers);
+    } catch (error) {
+      console.error('Error fetching users:', error);
+    }
+  };
+
   const fetchInspection = async (inspectionId: number) => {
     try {
       const response = await getInspection(inspectionId);
@@ -42,7 +55,7 @@ const InspectionForm: React.FC = () => {
       setFormData({
         facilityName: inspection.facilityName,
         inspectionDate: inspection.inspectionDate,
-        responsibleEmployee: inspection.responsibleEmployee,
+        responsibleUserId: inspection.responsibleUser?.id?.toString() || '',
         checklistId: inspection.checklist?.id?.toString() || ''
       });
     } catch (error) {
@@ -59,13 +72,11 @@ const InspectionForm: React.FC = () => {
     e.preventDefault();
     setLoading(true);
 
-    const inspectionData: Partial<Inspection> = {
+    const inspectionData = {
       facilityName: formData.facilityName,
       inspectionDate: formData.inspectionDate,
-      responsibleEmployee: formData.responsibleEmployee,
-      checklist: formData.checklistId 
-        ? checklists.find(c => c.id === parseInt(formData.checklistId)) || null
-        : null
+      responsibleUserId: parseInt(formData.responsibleUserId),
+      checklistId: formData.checklistId ? parseInt(formData.checklistId) : null
     };
 
     try {
@@ -113,16 +124,21 @@ const InspectionForm: React.FC = () => {
         </div>
 
         <div className="form-group">
-          <label htmlFor="responsibleEmployee">{t('responsibleEmployee')} *</label>
-          <input
-            type="text"
-            id="responsibleEmployee"
-            name="responsibleEmployee"
-            value={formData.responsibleEmployee}
+          <label htmlFor="responsibleUserId">{t('responsibleEmployee')} *</label>
+          <select
+            id="responsibleUserId"
+            name="responsibleUserId"
+            value={formData.responsibleUserId}
             onChange={handleChange}
             required
-            placeholder={t('responsibleEmployee')}
-          />
+          >
+            <option value="">{t('selectUser')}</option>
+            {users.map(user => (
+              <option key={user.id} value={user.id}>
+                {user.name} ({user.username})
+              </option>
+            ))}
+          </select>
         </div>
 
         <div className="form-group">

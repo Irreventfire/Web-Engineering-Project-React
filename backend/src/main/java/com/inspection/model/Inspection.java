@@ -19,8 +19,9 @@ public class Inspection {
     @Column(nullable = false)
     private LocalDate inspectionDate;
     
-    @Column(nullable = false)
-    private String responsibleEmployee;
+    @ManyToOne
+    @JoinColumn(name = "responsible_user_id", nullable = false)
+    private User responsibleUser;
     
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -36,10 +37,10 @@ public class Inspection {
     // Constructors
     public Inspection() {}
     
-    public Inspection(String facilityName, LocalDate inspectionDate, String responsibleEmployee) {
+    public Inspection(String facilityName, LocalDate inspectionDate, User responsibleUser) {
         this.facilityName = facilityName;
         this.inspectionDate = inspectionDate;
-        this.responsibleEmployee = responsibleEmployee;
+        this.responsibleUser = responsibleUser;
     }
     
     // Getters and Setters
@@ -52,8 +53,8 @@ public class Inspection {
     public LocalDate getInspectionDate() { return inspectionDate; }
     public void setInspectionDate(LocalDate inspectionDate) { this.inspectionDate = inspectionDate; }
     
-    public String getResponsibleEmployee() { return responsibleEmployee; }
-    public void setResponsibleEmployee(String responsibleEmployee) { this.responsibleEmployee = responsibleEmployee; }
+    public User getResponsibleUser() { return responsibleUser; }
+    public void setResponsibleUser(User responsibleUser) { this.responsibleUser = responsibleUser; }
     
     public InspectionStatus getStatus() { return status; }
     public void setStatus(InspectionStatus status) { this.status = status; }

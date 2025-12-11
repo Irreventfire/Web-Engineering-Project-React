@@ -12,7 +12,7 @@ const InspectionList: React.FC = () => {
   const [expandedInspectionId, setExpandedInspectionId] = useState<number | null>(null);
   const navigate = useNavigate();
   const { t } = useLanguage();
-  const { canEdit } = useAuth();
+  const { canEdit, user } = useAuth();
 
   useEffect(() => {
     fetchInspections();
@@ -79,6 +79,7 @@ const InspectionList: React.FC = () => {
 
   const filteredInspections = inspections.filter(i => {
     if (filter === 'all') return true;
+    if (filter === 'myInspections') return i.responsibleUser?.id === user?.id;
     return i.status === filter;
   });
 
@@ -109,6 +110,7 @@ const InspectionList: React.FC = () => {
           aria-label="Filter inspections by status"
         >
           <option value="all">{t('allInspections')}</option>
+          <option value="myInspections">{t('myInspections')}</option>
           <option value={InspectionStatus.PLANNED}>{t('planned')}</option>
           <option value={InspectionStatus.IN_PROGRESS}>{t('inProgress')}</option>
           <option value={InspectionStatus.COMPLETED}>{t('completed')}</option>
@@ -132,7 +134,7 @@ const InspectionList: React.FC = () => {
                     <div>
                       <h3 className="inspection-title">{inspection.facilityName}</h3>
                       <p className="inspection-subtitle">
-                        {t('employee')}: {inspection.responsibleEmployee}
+                        {t('employee')}: {inspection.responsibleUser?.name}
                       </p>
                     </div>
                   </div>

@@ -6,22 +6,14 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDate;
-
 @Component
 public class DataInitializer implements CommandLineRunner {
     
-    private final InspectionRepository inspectionRepository;
-    private final ChecklistRepository checklistRepository;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     
-    public DataInitializer(InspectionRepository inspectionRepository,
-                          ChecklistRepository checklistRepository,
-                          UserRepository userRepository,
+    public DataInitializer(UserRepository userRepository,
                           PasswordEncoder passwordEncoder) {
-        this.inspectionRepository = inspectionRepository;
-        this.checklistRepository = checklistRepository;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }

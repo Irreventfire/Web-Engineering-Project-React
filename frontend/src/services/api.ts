@@ -52,8 +52,10 @@ export const getInspections = () => api.get<Inspection[]>('/inspections');
 export const getInspection = (id: number) => api.get<Inspection>(`/inspections/${id}`);
 export const getInspectionsByStatus = (status: string) => api.get<Inspection[]>(`/inspections/status/${status}`);
 export const getStatistics = () => api.get<Statistics>('/inspections/statistics');
-export const createInspection = (inspection: Partial<Inspection>) => api.post<Inspection>('/inspections', inspection);
-export const updateInspection = (id: number, inspection: Partial<Inspection>) => api.put<Inspection>(`/inspections/${id}`, inspection);
+export const createInspection = (data: { facilityName: string; inspectionDate: string; responsibleUserId: number; checklistId: number | null }) => 
+  api.post<Inspection>('/inspections', data);
+export const updateInspection = (id: number, data: { facilityName: string; inspectionDate: string; responsibleUserId: number; checklistId?: number | null }) => 
+  api.put<Inspection>(`/inspections/${id}`, data);
 export const updateInspectionStatus = (id: number, status: string) => api.put<Inspection>(`/inspections/${id}/status`, { status });
 export const deleteInspection = (id: number) => api.delete(`/inspections/${id}`);
 

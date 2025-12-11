@@ -116,7 +116,7 @@ const Dashboard: React.FC = () => {
                 <tr key={inspection.id}>
                   <td>{inspection.facilityName}</td>
                   <td>{new Date(inspection.inspectionDate).toLocaleDateString()}</td>
-                  <td>{inspection.responsibleEmployee}</td>
+                  <td>{inspection.responsibleUser?.name}</td>
                   <td>
                     <span className={`status-badge ${getStatusClass(inspection.status)}`}>
                       {getStatusLabel(inspection.status)}
