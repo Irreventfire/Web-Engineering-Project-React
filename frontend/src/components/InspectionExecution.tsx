@@ -217,7 +217,7 @@ const InspectionExecution: React.FC = () => {
                 
                 <div className="result-options">
                   <button
-                    className={`status-button ${result?.status === ResultStatus.FULFILLED ? 'active' : ''}`}
+                    className={`result-option ${result?.status === ResultStatus.FULFILLED ? 'selected fulfilled' : ''}`}
                     onClick={() => handleStatusChange(item, ResultStatus.FULFILLED)}
                   >
                     ✓ {t('fulfilled')}

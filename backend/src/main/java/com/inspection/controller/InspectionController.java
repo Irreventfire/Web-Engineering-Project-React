@@ -1,8 +1,10 @@
 package com.inspection.controller;
 
+import com.inspection.model.Checklist;
 import com.inspection.model.Inspection;
 import com.inspection.model.InspectionStatus;
 import com.inspection.model.User;
+import com.inspection.repository.ChecklistRepository;
 import com.inspection.repository.InspectionRepository;
 import com.inspection.repository.UserRepository;
 import org.springframework.http.HttpStatus;
@@ -20,10 +22,12 @@ public class InspectionController {
     
     private final InspectionRepository inspectionRepository;
     private final UserRepository userRepository;
+    private final ChecklistRepository checklistRepository;
     
-    public InspectionController(InspectionRepository inspectionRepository, UserRepository userRepository) {
+    public InspectionController(InspectionRepository inspectionRepository, UserRepository userRepository, ChecklistRepository checklistRepository) {
         this.inspectionRepository = inspectionRepository;
         this.userRepository = userRepository;
+        this.checklistRepository = checklistRepository;
     }
     
     @GetMapping
@@ -68,7 +72,10 @@ public class InspectionController {
             
             // Handle checklist if provided
             if (requestBody.containsKey("checklistId") && requestBody.get("checklistId") != null) {
-                // Checklist will be set via the relationship
+                Long checklistId = Long.valueOf(requestBody.get("checklistId").toString());
+                Checklist checklist = checklistRepository.findById(checklistId)
+                    .orElseThrow(() -> new RuntimeException("Checklist not found"));
+                inspection.setChecklist(checklist);
             }
             
             Inspection saved = inspectionRepository.save(inspection);
@@ -93,7 +100,18 @@ public class InspectionController {
                             existing.setResponsibleUser(responsibleUser);
                         }
                         
-                        // Handle checklist update if needed
+                        // Handle checklist update
+                        if (requestBody.containsKey("checklistId")) {
+                            if (requestBody.get("checklistId") != null) {
+                                Long checklistId = Long.valueOf(requestBody.get("checklistId").toString());
+                                Checklist checklist = checklistRepository.findById(checklistId)
+                                    .orElseThrow(() -> new RuntimeException("Checklist not found"));
+                                existing.setChecklist(checklist);
+                            } else {
+                                existing.setChecklist(null);
+                            }
+                        }
+                        
                         return ResponseEntity.ok(inspectionRepository.save(existing));
                     })
                     .orElse(ResponseEntity.notFound().build());

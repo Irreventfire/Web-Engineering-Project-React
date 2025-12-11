@@ -979,23 +979,26 @@ tbody tr:last-child td {
 
 .desired-state-container {
   margin-bottom: 1rem;
-  padding: 0.5rem;
-  background-color: #e8f5e9;
-  border-radius: 4px;
+  padding: 0.75rem;
+  background-color: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 6px;
 }
 
 .desired-state-label {
   font-size: 0.85rem;
-  font-weight: 500;
-  color: #388e3c;
+  font-weight: 600;
+  color: #495057;
+  display: block;
+  margin-bottom: 0.5rem;
 }
 
 .desired-state-image {
   max-width: 100%;
   max-height: 150px;
-  margin-top: 0.5rem;
   border-radius: 4px;
-  border: 1px solid #c8e6c9;
+  border: 1px solid #dee2e6;
+  object-fit: contain;
 }
 
 .current-state-container {
@@ -1083,13 +1086,6 @@ tbody tr:last-child td {
   display: flex;
   gap: 1rem;
   flex-wrap: wrap;
-}
-
-.desired-state-label {
-  font-size: 0.85rem;
-  font-weight: 500;
-  color: #388e3c;
-  display: block;
 }
 
 /* Modern Checklist Styles */
