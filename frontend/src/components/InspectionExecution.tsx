@@ -16,7 +16,7 @@ const InspectionExecution: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState<number | null>(null);
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
   useEffect(() => {
     if (id) {
@@ -183,7 +183,7 @@ const InspectionExecution: React.FC = () => {
       <div className="inspection-header">
         <h2>{inspection.facilityName}</h2>
         <div className="inspection-meta">
-          <span>{t('date')}: {new Date(inspection.inspectionDate).toLocaleDateString()}</span>
+          <span>{t('date')}: {new Date(inspection.inspectionDate).toLocaleDateString(language === 'de' ? 'de-DE' : 'en-US')}</span>
           <span>{t('employee')}: {inspection.responsibleUser?.name}</span>
           <span>{t('checklist')}: {inspection.checklist.name}</span>
         </div>

@@ -11,7 +11,7 @@ const InspectionList: React.FC = () => {
   const [filter, setFilter] = useState<string>('all');
   const [expandedInspectionId, setExpandedInspectionId] = useState<number | null>(null);
   const navigate = useNavigate();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const { canEdit, user } = useAuth();
 
   useEffect(() => {
@@ -139,7 +139,7 @@ const InspectionList: React.FC = () => {
                     </div>
                   </div>
                   <div className="inspection-meta">
-                    <span className="date-badge">{new Date(inspection.inspectionDate).toLocaleDateString()}</span>
+                    <span className="date-badge">{new Date(inspection.inspectionDate).toLocaleDateString(language === 'de' ? 'de-DE' : 'en-US')}</span>
                     <span className={`status-badge-modern ${getStatusClass(inspection.status)}`}>
                       {getStatusLabel(inspection.status)}
                     </span>
@@ -155,7 +155,7 @@ const InspectionList: React.FC = () => {
                       </div>
                       <div className="detail-item">
                         <span className="detail-label">{t('date')}:</span>
-                        <span className="detail-value">{new Date(inspection.inspectionDate).toLocaleDateString()}</span>
+                        <span className="detail-value">{new Date(inspection.inspectionDate).toLocaleDateString(language === 'de' ? 'de-DE' : 'en-US')}</span>
                       </div>
                       <div className="detail-item">
                         <span className="detail-label">{t('status')}:</span>

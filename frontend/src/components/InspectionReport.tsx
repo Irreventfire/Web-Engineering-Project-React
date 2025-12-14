@@ -13,7 +13,7 @@ const InspectionReport: React.FC = () => {
   const [inspection, setInspection] = useState<Inspection | null>(null);
   const [results, setResults] = useState<Result[]>([]);
   const [loading, setLoading] = useState(true);
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
   useEffect(() => {
     if (id) {
@@ -94,7 +94,7 @@ const InspectionReport: React.FC = () => {
         <h1>{t('inspectionReport')}</h1>
         <h2>{inspection.facilityName}</h2>
         <p>
-          {t('date')}: {new Date(inspection.inspectionDate).toLocaleDateString()} | 
+          {t('date')}: {new Date(inspection.inspectionDate).toLocaleDateString(language === 'de' ? 'de-DE' : 'en-US')} | 
           {t('inspector')}: {inspection.responsibleUser?.name}
         </p>
         {inspection.checklist && (
