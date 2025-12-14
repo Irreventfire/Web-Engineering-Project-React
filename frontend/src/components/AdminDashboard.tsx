@@ -489,8 +489,8 @@ const AdminDashboard: React.FC = () => {
                 <div className="user-body-modern">
                   <div className="user-details">
                     <div className="detail-item">
-                      <span className="detail-label">{t('id')}:</span>
-                      <span className="detail-value">{user.id}</span>
+                      <span className="detail-label">{t('name')}:</span>
+                      <span className="detail-value">{user.name}</span>
                     </div>
                     <div className="detail-item">
                       <span className="detail-label">{t('email')}:</span>
