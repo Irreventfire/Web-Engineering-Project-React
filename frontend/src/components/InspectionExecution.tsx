@@ -183,7 +183,7 @@ const InspectionExecution: React.FC = () => {
       <div className="inspection-header">
         <h2>{inspection.facilityName}</h2>
         <div className="inspection-meta">
-          <span>{t('date')}: {new Date(inspection.inspectionDate).toLocaleDateString(language === 'de' ? 'de-DE' : 'en-US')}</span>
+          <span>{t('date')}: {new Date(inspection.inspectionDate).toLocaleDateString(language === 'de' ? 'de-DE' : language === 'fr' ? 'fr-FR' : 'en-US')}</span>
           <span>{t('employee')}: {inspection.responsibleUser?.name}</span>
           <span>{t('checklist')}: {inspection.checklist.name}</span>
         </div>

@@ -2,8 +2,10 @@ package com.inspection.controller;
 
 import com.inspection.model.Checklist;
 import com.inspection.model.ChecklistItem;
+import com.inspection.model.Result;
 import com.inspection.repository.ChecklistRepository;
 import com.inspection.repository.ChecklistItemRepository;
+import com.inspection.repository.ResultRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,11 +19,14 @@ public class ChecklistController {
     
     private final ChecklistRepository checklistRepository;
     private final ChecklistItemRepository checklistItemRepository;
+    private final ResultRepository resultRepository;
     
     public ChecklistController(ChecklistRepository checklistRepository, 
-                               ChecklistItemRepository checklistItemRepository) {
+                               ChecklistItemRepository checklistItemRepository,
+                               ResultRepository resultRepository) {
         this.checklistRepository = checklistRepository;
         this.checklistItemRepository = checklistItemRepository;
+        this.resultRepository = resultRepository;
     }
     
     @GetMapping
@@ -86,11 +91,20 @@ public class ChecklistController {
     
     @DeleteMapping("/items/{itemId}")
     public ResponseEntity<Void> deleteChecklistItem(@PathVariable Long itemId) {
-        if (checklistItemRepository.existsById(itemId)) {
-            checklistItemRepository.deleteById(itemId);
-            return ResponseEntity.noContent().build();
+        if (!checklistItemRepository.existsById(itemId)) {
+            return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.notFound().build();
+        
+        // Before deleting the item, nullify the reference in any results that point to it
+        // This preserves inspection results while allowing the checklist item to be deleted
+        List<Result> relatedResults = resultRepository.findByChecklistItemId(itemId);
+        for (Result result : relatedResults) {
+            result.setChecklistItem(null);
+            resultRepository.save(result);
+        }
+        
+        checklistItemRepository.deleteById(itemId);
+        return ResponseEntity.noContent().build();
     }
     
     @PutMapping("/items/{itemId}")

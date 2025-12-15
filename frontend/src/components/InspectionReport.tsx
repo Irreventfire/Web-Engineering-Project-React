@@ -94,7 +94,7 @@ const InspectionReport: React.FC = () => {
         <h1>{t('inspectionReport')}</h1>
         <h2>{inspection.facilityName}</h2>
         <p>
-          {t('date')}: {new Date(inspection.inspectionDate).toLocaleDateString(language === 'de' ? 'de-DE' : 'en-US')} | 
+          {t('date')}: {new Date(inspection.inspectionDate).toLocaleDateString(language === 'de' ? 'de-DE' : language === 'fr' ? 'fr-FR' : 'en-US')} | 
           {t('inspector')}: {inspection.responsibleUser?.name}
         </p>
         {inspection.checklist && (

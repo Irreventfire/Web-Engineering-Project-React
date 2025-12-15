@@ -17,7 +17,7 @@ public class Result {
     private Inspection inspection;
     
     @ManyToOne
-    @JoinColumn(name = "checklist_item_id")
+    @JoinColumn(name = "checklist_item_id", nullable = true)
     private ChecklistItem checklistItem;
     
     @Enumerated(EnumType.STRING)

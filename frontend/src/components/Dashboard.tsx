@@ -115,7 +115,7 @@ const Dashboard: React.FC = () => {
               {inspections.slice(0, 10).map((inspection) => (
                 <tr key={inspection.id}>
                   <td>{inspection.facilityName}</td>
-                  <td>{new Date(inspection.inspectionDate).toLocaleDateString(language === 'de' ? 'de-DE' : 'en-US')}</td>
+                  <td>{new Date(inspection.inspectionDate).toLocaleDateString(language === 'de' ? 'de-DE' : language === 'fr' ? 'fr-FR' : 'en-US')}</td>
                   <td>{inspection.responsibleUser?.name}</td>
                   <td>
                     <span className={`status-badge ${getStatusClass(inspection.status)}`}>

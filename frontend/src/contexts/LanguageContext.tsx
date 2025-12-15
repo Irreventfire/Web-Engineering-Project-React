@@ -17,7 +17,7 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
   // Initialize language from localStorage synchronously to avoid initial English flash
   const getInitialLanguage = (): Language => {
     const storedLanguage = localStorage.getItem('language') as Language;
-    if (storedLanguage === 'en' || storedLanguage === 'de') {
+    if (storedLanguage === 'en' || storedLanguage === 'de' || storedLanguage === 'fr') {
       return storedLanguage;
     }
     return 'de'; // Default to German

@@ -139,7 +139,7 @@ const InspectionList: React.FC = () => {
                     </div>
                   </div>
                   <div className="inspection-meta">
-                    <span className="date-badge">{new Date(inspection.inspectionDate).toLocaleDateString(language === 'de' ? 'de-DE' : 'en-US')}</span>
+                    <span className="date-badge">{new Date(inspection.inspectionDate).toLocaleDateString(language === 'de' ? 'de-DE' : language === 'fr' ? 'fr-FR' : 'en-US')}</span>
                     <span className={`status-badge-modern ${getStatusClass(inspection.status)}`}>
                       {getStatusLabel(inspection.status)}
                     </span>
@@ -155,7 +155,7 @@ const InspectionList: React.FC = () => {
                       </div>
                       <div className="detail-item">
                         <span className="detail-label">{t('date')}:</span>
-                        <span className="detail-value">{new Date(inspection.inspectionDate).toLocaleDateString(language === 'de' ? 'de-DE' : 'en-US')}</span>
+                        <span className="detail-value">{new Date(inspection.inspectionDate).toLocaleDateString(language === 'de' ? 'de-DE' : language === 'fr' ? 'fr-FR' : 'en-US')}</span>
                       </div>
                       <div className="detail-item">
                         <span className="detail-label">{t('status')}:</span>
